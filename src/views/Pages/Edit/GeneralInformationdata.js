@@ -3296,10 +3296,10 @@ function GeneralInformationdata() {
                               placeholder="Select Option"
                               isRequired
                             >
-                              <option value="Government Quota">
+                              <option value="GQ">
                                 Government Quota
                               </option>
-                              <option value="Management Quota">
+                              <option value="MQ">
                                 Management Quota
                               </option>
                             </Select>
@@ -3384,8 +3384,8 @@ function GeneralInformationdata() {
                               placeholder="Select Option"
                               isRequired
                             >
-                              <option value="Day Scholar">Day Scholar</option>
-                              <option value="Hosteller">Hosteller</option>
+                              <option value="D">Day Scholar</option>
+                              <option value="H">Hosteller</option>
                             </Select>
                           </FormControl>
                         </Flex>

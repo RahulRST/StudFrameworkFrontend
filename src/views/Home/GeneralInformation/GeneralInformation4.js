@@ -202,6 +202,7 @@ function GeneralInformation3() {
               <Select
                 mt="1em"
                 bg={inputBg}
+                borderRadius={15}
                 placeholder="Department"
                 id="dept"
                 onChange={(e) => setSearchTerm2(e.target.value)}
@@ -264,6 +265,7 @@ function GeneralInformation3() {
               <Select
                 mt="1em"
                 bg={inputBg}
+                borderRadius={15}
                 placeholder="Batch"
                 id="batch"
                 onChange={(e) => setSearchTerm1(e.target.value)}
