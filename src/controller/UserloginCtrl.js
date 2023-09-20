@@ -32,6 +32,7 @@ export default function handleLogin() {
       email.includes("@licet.ac.in") &&
       !other_users_check(email)
     ) {
+      localStorage.setItem("useremail", email);
       window.location.href = URL + "Student#/auth/GeneralInformationdata";
     }
 
