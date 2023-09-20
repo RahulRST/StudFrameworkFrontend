@@ -20,7 +20,9 @@ import {
   InputGroup,
   InputLeftElement,
   Box,
+  useToast,
 } from "@chakra-ui/react";
+
 // Custom components
 import { SearchIcon } from "@chakra-ui/icons";
 import Card from "components/Card/Card.js";
@@ -28,16 +30,21 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import StudentListInternational from "components/Tables/StudentList/StudentListInternational1";
 
-var data2 = [];
-
 import { server_URL } from "controller/urls_config";
 import { CSVLink } from "react-csv";
+
+var Loader = require("react-loader"),
+  data2 = [];
 
 function InternationalExposure() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [Loaded, setLoading] = useState(false);
 
   let params = new URLSearchParams();
+
+  // Toast var
+  const toast = useToast();
 
   params.append("batch", localStorage.getItem("batch"));
   params.append("dept", localStorage.getItem("dept"));
@@ -45,7 +52,7 @@ function InternationalExposure() {
   useEffect(async () => {
     axios.post(server_URL + "InternationalExpo", params).then((items) => {
       setData(items.data);
-      console.log(items.data);
+      setLoading(true);
     });
   }, []);
 
@@ -69,6 +76,7 @@ function InternationalExposure() {
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Loader color="#FBD38D" height={10} width={10} loaded={Loaded} />
       <Card mb="1rem">
         <CardBody>
           <Flex flexDirection="column" align="center" justify="center" w="100%">
@@ -130,9 +138,17 @@ function InternationalExposure() {
             <Button
               minWidth="fit-content"
               mt="1.5em"
-              onClick="m"
               colorScheme="orange"
               variant="solid"
+              onClick={() =>
+                toast({
+                  title: "Report Downloaded Successfully",
+                  status: "success",
+                  duration: 9000,
+                  position: "top",
+                  isClosable: true,
+                })
+              }
             >
               Download Report
             </Button>

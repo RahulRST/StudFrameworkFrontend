@@ -1,3 +1,5 @@
+/** @format */
+
 //Table with 5 columns
 
 import {

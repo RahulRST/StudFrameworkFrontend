@@ -1,6 +1,5 @@
 import axios from "axios";
-import { URL, server_URL } from "./urls_config";
-
+import { server_URL } from "./urls_config";
 export default function change_pass() {
   document.getElementById("pass-fail").style.display = "none";
   document.getElementById("pass-mis").style.display = "none";
@@ -12,7 +11,6 @@ export default function change_pass() {
   var oldPass = document.getElementById("old-pass").value;
   var newPass = document.getElementById("new-pass").value;
   var rePass = document.getElementById("re-pass").value;
-  console.log(oldPass);
   if (newPass == rePass) {
     let params = new URLSearchParams();
     params.append("newpass", newPass);
@@ -20,7 +18,6 @@ export default function change_pass() {
     params.append("email", localStorage.useremail);
     params.append("auth_token", localStorage.auth_token);
     axios.post(server_URL + "passchange", params).then((result) => {
-      console.log(result.data);
       if (result.data == "pass-fail") {
         document.getElementById("pass-fail").style.display = "block";
         pcbtn.disabled = false;

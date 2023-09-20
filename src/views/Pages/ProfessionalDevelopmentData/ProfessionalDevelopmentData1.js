@@ -25,7 +25,7 @@ import CardBody from "components/Card/CardBody.js";
 
 import ProfessionalDevelopmentTableRow1 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDIndustrialVisitTR1";
 import ProfessionalDevelopmentTableRow2 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDInplantTrainingTR1";
-import ProfessionalDevelopmentTableRow3 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDGuestlectureTR";
+import ProfessionalDevelopmentTableRow3 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDGuestlectureTR1";
 import ProfessionalDevelopmentTableRow4 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDMotivationalTalkTR1";
 import ProfessionalDevelopmentTableRow5 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDInternshipTR1";
 import ProfessionalDevelopmentTableRow6 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDCoursesTR1";
@@ -36,6 +36,10 @@ import ProfessionalDevelopmentTableRow10 from "components/Tables/ProfessionalTab
 import ProfessionalDevelopmentTableRow11 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDMiniProjectTR1";
 import ProfessionalDevelopmentTableRow12 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDFinalprojectTR1";
 import ProfessionalDevelopmentTableRow13 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDPublicationsTR1";
+import ProfessionalDevelopmentTableRow14 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDSystemDiscoveryTR1";
+import ProfessionalDevelopmentTableRow15 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDSkillRackTR1";
+import ProfessionalDevelopmentTableRow16 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDSoftSkillsTR1";
+import ProfessionalDevelopmentTableRow17 from "components/Tables/ProfessionalTableRow/ProfessionalTableRow1/PDEmployabilityTR1";
 
 import { URL, server_URL } from "controller/urls_config";
 
@@ -53,6 +57,10 @@ function ProfessionalDevelopmentData1() {
   const [drop11, setDrop11] = useState(false);
   const [drop12, setDrop12] = useState(false);
   const [drop13, setDrop13] = useState(false);
+  const [drop14, setDrop14] = useState(false);
+  const [drop15, setDrop15] = useState(false);
+  const [drop16, setDrop16] = useState(false);
+  const [drop17, setDrop17] = useState(false);
 
   const [p1data, setp1data] = useState([]);
   const [p2data, setp2data] = useState([]);
@@ -67,13 +75,17 @@ function ProfessionalDevelopmentData1() {
   const [p11data, setp11data] = useState([]);
   const [p12data, setp12data] = useState([]);
   const [p13data, setp13data] = useState([]);
+  const [p14data, setp14data] = useState([]);
+  const [p15data, setp15data] = useState([]);
+  const [p16data, setp16data] = useState([]);
+  const [p17data, setp17data] = useState([]);
 
   const textColor = useColorModeValue("gray.700", "white");
   const Null_message = "NULL";
 
   let params = new URLSearchParams();
   params.append("RollNumber", localStorage.getItem("generalStudent"));
-  useState(async () => {
+  useEffect(async () => {
     axios
       .all([
         axios.post(server_URL + "Industrialv_cadisplay", params),
@@ -89,6 +101,10 @@ function ProfessionalDevelopmentData1() {
         axios.post(server_URL + "Miniproj_cadisplay", params),
         axios.post(server_URL + "finpro_CA_display", params),
         axios.post(server_URL + "publication_cadisplay", params),
+        axios.post(server_URL + "sdiscovery_cadisplay", params),
+        axios.post(server_URL + "aptitude_cadisplay", params),
+        axios.post(server_URL + "sskills_cadisplay", params),
+        axios.post(server_URL + "empskills_cadisplay", params),
       ])
       .then(
         axios.spread(
@@ -105,7 +121,11 @@ function ProfessionalDevelopmentData1() {
             data10,
             data11,
             data12,
-            data13
+            data13,
+            data14,
+            data15,
+            data16,
+            data17
           ) => {
             setp1data(data1.data);
             setp2data(data2.data);
@@ -120,6 +140,10 @@ function ProfessionalDevelopmentData1() {
             setp11data(data11.data);
             setp12data(data12.data);
             setp13data(data13.data);
+            setp14data(data14.data);
+            setp15data(data15.data);
+            setp16data(data16.data);
+            setp17data(data17.data);
           }
         )
       );
@@ -149,7 +173,11 @@ function ProfessionalDevelopmentData1() {
                   setDrop10(true),
                   setDrop11(true),
                   setDrop12(true),
-                  setDrop13(true);
+                  setDrop13(true),
+                  setDrop14(true),
+                  setDrop15(true),
+                  setDrop16(true),
+                  setDrop17(true);
               }}
             >
               Show All
@@ -174,7 +202,11 @@ function ProfessionalDevelopmentData1() {
                   setDrop10(false),
                   setDrop11(false),
                   setDrop12(false),
-                  setDrop13(false);
+                  setDrop13(false),
+                  setDrop14(false),
+                  setDrop15(false),
+                  setDrop16(false),
+                  setDrop17(false);
               }}
             >
               Hide All
@@ -637,57 +669,6 @@ function ProfessionalDevelopmentData1() {
         <Card>
           <CardHeader>
             <Text fontSize="xl" color={textColor} fontWeight="bold">
-              Placement Training
-            </Text>
-            <Button
-              ms="auto"
-              bg="orange.400"
-              width="fit-content"
-              height="2em"
-              onClick={() => setDrop10(!drop10)}
-            >
-              {drop10 ? "Hide" : "Show"}
-            </Button>
-          </CardHeader>
-          <Collapse in={drop10}>
-            <CardBody mt="1em" overflowX={{ sm: "scroll" }}>
-              <Table variant="simple" color={textColor}>
-                <Thead>
-                  <Tr my=".8rem" pl="0px" color="gray.400">
-                    <Th color="gray.400">Aptitude</Th>
-                    <Th color="gray.400">Soft Skill</Th>
-                    <Th color="gray.400">Reasoning</Th>
-                    <Th color="gray.400">Technical Skill</Th>
-                    <Th color="gray.400">Credits</Th>
-                    <Th color="gray.400">Verify Status</Th>
-                    <Th color="gray.400">Edit</Th>
-                    <Th color="gray.400">Delete</Th>
-                    <Th color="gray.400">Verify</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {p10data.map((item10) => {
-                    return (
-                      <ProfessionalDevelopmentTableRow10
-                        id={item10.s_no}
-                        row1={item10.aptitude || Null_message}
-                        row2={item10.soft_skills || Null_message}
-                        row3={item10.reasoning || Null_message}
-                        row4={item10.technical_training || Null_message}
-                        row5={item10.credits || Null_message}
-                        row6={item10.verified || Null_message}
-                      />
-                    );
-                  })}
-                </Tbody>
-              </Table>
-            </CardBody>
-          </Collapse>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <Text fontSize="xl" color={textColor} fontWeight="bold">
               Mini Project
             </Text>
             <Button
@@ -835,6 +816,240 @@ function ProfessionalDevelopmentData1() {
             </CardBody>
           </Collapse>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <Text fontSize="xl" color={textColor} fontWeight="bold">
+              Placement Training
+            </Text>
+            <Button
+              ms="auto"
+              bg="orange.400"
+              width="fit-content"
+              height="2em"
+              onClick={() => setDrop10(!drop10)}
+            >
+              {drop10 ? "Hide" : "Show"}
+            </Button>
+          </CardHeader>
+          <Collapse in={drop10}>
+            <CardBody mt="1em" overflowX={{ sm: "scroll" }}>
+              <Table variant="simple" color={textColor}>
+                <Thead>
+                  <Tr my=".8rem" pl="0px" color="gray.400">
+                    <Th color="gray.400">Aptitude</Th>
+                    <Th color="gray.400">Soft Skill</Th>
+                    <Th color="gray.400">Reasoning</Th>
+                    <Th color="gray.400">Technical Skill</Th>
+                    <Th color="gray.400">Credits</Th>
+                    <Th color="gray.400">Edit</Th>
+                    <Th color="gray.400">Delete</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {p10data.map((item10) => {
+                    return (
+                      <ProfessionalDevelopmentTableRow10
+                        id={item10.s_no}
+                        row1={item10.aptitude || Null_message}
+                        row2={item10.soft_skills || Null_message}
+                        row3={item10.reasoning || Null_message}
+                        row4={item10.technical_training || Null_message}
+                        row5={item10.credits || Null_message}
+                      />
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </CardBody>
+          </Collapse>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Text fontSize="xl" color={textColor} fontWeight="bold">
+              Aptitude
+            </Text>
+            <Button
+              ms="auto"
+              bg="orange.400"
+              width="fit-content"
+              height="2em"
+              onClick={() => setDrop15(!drop15)}
+            >
+              {drop15 ? "Hide" : "Show"}
+            </Button>
+          </CardHeader>
+          <Collapse in={drop15}>
+            <CardBody mt="1em" overflowX={{ sm: "scroll" }}>
+              <Table variant="simple" color={textColor}>
+                <Thead>
+                  <Tr my=".8rem" pl="0px" color="gray.400">
+                    <Th color="gray.400">Assessment</Th>
+                    <Th color="gray.400">Date</Th>
+                    <Th color="gray.400">Remarks</Th>
+                    <Th color="gray.400">Credits</Th>
+                    <Th color="gray.400">Edit</Th>
+                    <Th color="gray.400">Delete</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {p15data.map((item15) => {
+                    return (
+                      <ProfessionalDevelopmentTableRow15
+                        id={item15.s_no}
+                        row1={item15.assessment || Null_message}
+                        row2={item15.date || Null_message}
+                        row3={item15.remarks || Null_message}
+                        row4={item15.credits || Null_message}
+                      />
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </CardBody>
+          </Collapse>
+        </Card>
+
+        {/* <Card>
+          <CardHeader>
+            <Text fontSize="xl" color={textColor} fontWeight="bold">
+              Soft Skills
+            </Text>
+            <Button
+              ms="auto"
+              bg="orange.400"
+              width="fit-content"
+              height="2em"
+              onClick={() => setDrop16(!drop16)}
+            >
+              {drop16 ? "Hide" : "Show"}
+            </Button>
+          </CardHeader>
+          <Collapse in={drop16}>
+            <CardBody mt="1em" overflowX={{ sm: "scroll" }}>
+              <Table variant="simple" color={textColor}>
+                <Thead>
+                  <Tr my=".8rem" pl="0px" color="gray.400">
+                    <Th color="gray.400">Skill</Th>
+                    <Th color="gray.400">Trainer</Th>
+                    <Th color="gray.400">Date</Th>
+                    <Th color="gray.400">Remarks</Th>
+                    <Th color="gray.400">Credits</Th>
+                    <Th color="gray.400">Edit</Th>
+                    <Th color="gray.400">Delete</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {p16data.map((item16) => {
+                    return (
+                      <ProfessionalDevelopmentTableRow16
+                        id={item16.s_no}
+                        row1={item16.skill || Null_message}
+                        row2={item16.trainer || Null_message}
+                        row3={item16.date || Null_message}
+                        row4={item16.remarks || Null_message}
+                        row5={item16.credits || Null_message}
+                      />
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </CardBody>
+          </Collapse>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Text fontSize="xl" color={textColor} fontWeight="bold">
+              System Discovery
+            </Text>
+            <Button
+              ms="auto"
+              bg="orange.400"
+              width="fit-content"
+              height="2em"
+              onClick={() => setDrop14(!drop14)}
+            >
+              {drop14 ? "Hide" : "Show"}
+            </Button>
+          </CardHeader>
+          <Collapse in={drop14}>
+            <CardBody mt="1em" overflowX={{ sm: "scroll" }}>
+              <Table variant="simple" color={textColor}>
+                <Thead>
+                  <Tr my=".8rem" pl="0px" color="gray.400">
+                    <Th color="gray.400">Components</Th>
+                    <Th color="gray.400">Date</Th>
+                    <Th color="gray.400">Remarks</Th>
+                    <Th color="gray.400">Credits</Th>
+                    <Th color="gray.400">Edit</Th>
+                    <Th color="gray.400">Delete</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {p14data.map((item14) => {
+                    return (
+                      <ProfessionalDevelopmentTableRow14
+                        id={item14.s_no}
+                        row1={item14.components || Null_message}
+                        row2={item14.date || Null_message}
+                        row3={item14.remarks || Null_message}
+                        row4={item14.credits || Null_message}
+                      />
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </CardBody>
+          </Collapse>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Text fontSize="xl" color={textColor} fontWeight="bold">
+              Employability Skills
+            </Text>
+            <Button
+              ms="auto"
+              bg="orange.400"
+              width="fit-content"
+              height="2em"
+              onClick={() => setDrop17(!drop17)}
+            >
+              {drop17 ? "Hide" : "Show"}
+            </Button>
+          </CardHeader>
+          <Collapse in={drop17}>
+            <CardBody mt="1em" overflowX={{ sm: "scroll" }}>
+              <Table variant="simple" color={textColor}>
+                <Thead>
+                  <Tr my=".8rem" pl="0px" color="gray.400">
+                    <Th color="gray.400">Components</Th>
+                    <Th color="gray.400">Date</Th>
+                    <Th color="gray.400">Remarks</Th>
+                    <Th color="gray.400">Credits</Th>
+                    <Th color="gray.400">Edit</Th>
+                    <Th color="gray.400">Delete</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {p17data.map((item17) => {
+                    return (
+                      <ProfessionalDevelopmentTableRow17
+                        id={item17.s_no}
+                        row1={item17.assessment || Null_message}
+                        row2={item17.date || Null_message}
+                        row3={item17.title || Null_message}
+                        row4={item17.credits || Null_message}
+                      />
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </CardBody>
+          </Collapse>
+        </Card> */}
       </SimpleGrid>
     </Flex>
   );

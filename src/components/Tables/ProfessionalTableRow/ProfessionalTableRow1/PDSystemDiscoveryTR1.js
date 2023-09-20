@@ -1,4 +1,6 @@
-//Class Advisor PD Courses TableRow
+/** @format */
+
+//Class Advisor PD Competitions TableRow
 import {
   Button,
   Flex,
@@ -14,6 +16,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useColorModeValue,
+  useToast,
   useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -22,36 +25,41 @@ import React from "react";
 import { server_URL } from "controller/urls_config";
 
 function ProfessionalDevelopmentTableRow(props) {
+  // Toast var
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { id, row1, row2, row3, row4, row5 } = props;
+  const { id, row1, row2, row3, row4} = props;
   const textColor = useColorModeValue("gray.700", "white");
 
   function funedit() {
     let cid = { id };
     let params = new URLSearchParams();
+    params.append("edit", "yes");
     params.append("columnid", cid.id);
-    params.append("topic", document.getElementById("TopicID").value);
-    params.append("resource_person", document.getElementById("RsprID").value);
-    params.append("outcome", document.getElementById("OutcomeID").value);
-    params.append("credits", document.getElementById("CreditsID").value);
-    axios.post(server_URL + "guest_edit", params);
+    params.append("components", document.getElementById("compID").value);
+    params.append("date", document.getElementById("DateID").value);
+    params.append("remarks", document.getElementById("ReID").value);
+    params.append("credits", document.getElementById("creditsID").value);
+    axios.post(server_URL + "sdiscovery_edit_delete", params).then((results) => {
+      if (results) {
+        window.location.reload(false);
+      }
+    });
   }
 
   function fundelete() {
     let cid = { id };
     let params = new URLSearchParams();
+    params.append("edit", "no");
     params.append("columnid", cid.id);
-    axios.post(server_URL + "guest_delete", params);
+    axios.post(server_URL + "sdiscovery_edit_delete", params).then((results) => {
+      if (results) {
+        window.location.reload(false);
+      }
+    });
   }
 
-  function funverify() {
-    let cid = { id };
-    let params = new URLSearchParams();
-    params.append("columnid", cid.id);
-    params.append("verify", "Verified");
-    axios.post(server_URL + "guest_verify", params);
-  }
 
   return (
     <Tr>
@@ -64,6 +72,7 @@ function ProfessionalDevelopmentTableRow(props) {
           </Flex>
         </Flex>
       </Td>
+
       <Td minWidth={{ sm: "10em" }}>
         <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
           <Flex direction="column">{row2}</Flex>
@@ -79,12 +88,6 @@ function ProfessionalDevelopmentTableRow(props) {
           <Flex direction="column">{row4}</Flex>
         </Flex>
       </Td>
-      <Td minWidth={{ sm: "5em" }}>
-        <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
-          <Flex direction="column">{row5}</Flex>
-        </Flex>
-      </Td>
-
       <Td>
         <Button
           onClick={onOpen}
@@ -102,8 +105,9 @@ function ProfessionalDevelopmentTableRow(props) {
             <ModalBody>
               <Tr>
                 <Td>
-                  <Text m="1em">Topic of the Lecture</Text>
+                  <Text m="1em">Components</Text>
                 </Td>
+
                 <Td>
                   <Input
                     minWidth="20em"
@@ -111,16 +115,14 @@ function ProfessionalDevelopmentTableRow(props) {
                     fontSize="sm"
                     type="text"
                     defaultValue={row1}
-                    id="TopicID"
+                    id="compID"
                   />
                 </Td>
               </Tr>
-
               <Tr>
                 <Td>
-                  <Text m="1em">Resource Person</Text>
+                  <Text m="1em">Date</Text>
                 </Td>
-
                 <Td>
                   <Input
                     minWidth="20em"
@@ -128,13 +130,14 @@ function ProfessionalDevelopmentTableRow(props) {
                     fontSize="sm"
                     type="text"
                     defaultValue={row2}
-                    id="RsprID"
+                    id="DateID"
                   />
                 </Td>
               </Tr>
+
               <Tr>
                 <Td>
-                  <Text m="1em">Outcome</Text>
+                  <Text m="1em">Remarks</Text>
                 </Td>
                 <Td>
                   <Input
@@ -143,7 +146,7 @@ function ProfessionalDevelopmentTableRow(props) {
                     fontSize="sm"
                     type="text"
                     defaultValue={row3}
-                    id="OutcomeID"
+                    id="ReID"
                   />
                 </Td>
               </Tr>
@@ -158,7 +161,7 @@ function ProfessionalDevelopmentTableRow(props) {
                     fontSize="sm"
                     type="text"
                     defaultValue={row4}
-                    id="CreditsID"
+                    id="creditsID"
                   />
                 </Td>
               </Tr>
@@ -169,6 +172,13 @@ function ProfessionalDevelopmentTableRow(props) {
                 colorScheme="blue"
                 mr={3}
                 onClick={() => {
+                  toast({
+                    title: "Edited Successfully",
+                    status: "success",
+                    duration: 9000,
+                    position: "top",
+                    isClosable: true,
+                  });
                   funedit();
                   onClose();
                 }}
@@ -181,23 +191,19 @@ function ProfessionalDevelopmentTableRow(props) {
       </Td>
       <Td>
         <Button
-          onClick={fundelete}
+          onClick={()=>{toast({
+            title: "Deleted Successfully",
+            status: "success",
+            duration: 9000,
+            position: "top",
+            isClosable: true,
+          }); 
+          fundelete();}}
           bg="orange.300"
           alignSelf="flex-end"
           width="fit-content"
         >
           Delete
-        </Button>
-      </Td>
-      <Td>
-        <Button
-          onClick={funverify}
-          bg="orange.300"
-          alignSelf="flex-end"
-          width="fit-content"
-          disabled={{ row5 }.row5 == "Verified" ? true : false}
-        >
-          Verify
         </Button>
       </Td>
     </Tr>

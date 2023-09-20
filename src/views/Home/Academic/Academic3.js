@@ -28,15 +28,20 @@ import CardBody from "components/Card/CardBody.js";
 import StudentListAcademic from "components/Tables/StudentList/StudentListAcademic3";
 import { server_URL } from "controller/urls_config";
 
+var Loader = require("react-loader");
+
 function Academic() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerm1, setSearchTerm1] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
+  const [Loaded, setLoading] = useState(false);
+  let params = new URLSearchParams();
 
   useEffect(async () => {
     axios.post(server_URL + "AcademicsDataofficial").then((items) => {
       setData(items.data);
+      setLoading(true);
     });
   }, []);
 

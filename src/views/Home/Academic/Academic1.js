@@ -23,6 +23,7 @@ import {
   useDisclosure,
   Collapse,
   Box,
+  useToast,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 // Custom components
@@ -31,6 +32,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import StudentListAcademic from "components/Tables/StudentList/StudentListAcademic1";
 import { server_URL } from "controller/urls_config";
+import { saveAs } from "file-saver";
 
 var data2 = [];
 
@@ -38,7 +40,13 @@ import { CSVLink } from "react-csv";
 
 function Academic() {
   const [data, setData] = useState([]);
+  const [file, setfile] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [Loaded, setLoading] = useState(false);
+
+  // Toast var
+  const toast = useToast();
+
   let params = new URLSearchParams();
   params.append("batch", localStorage.getItem("batch"));
   params.append("dept", localStorage.getItem("dept"));
@@ -46,16 +54,15 @@ function Academic() {
   useEffect(async () => {
     axios.post(server_URL + "Academic", params).then((items) => {
       setData(items.data);
+      setLoading(true);
     });
   }, []);
 
   let onFileChange = (event) => {
-    console.log(event.target.files);
-    onFileUpload(event.target.files[0]);
+    setfile(event.target.files[0]);
   };
 
-  // On file upload (click the upload button)
-  let onFileUpload = (file) => {
+  function onFileUpload() {
     const formData = new FormData();
     formData.append("excel", file);
     const config = {
@@ -64,7 +71,7 @@ function Academic() {
       },
     };
     axios.post(server_URL + "bulkupload", formData, config);
-  };
+  }
 
   const textColor = useColorModeValue("gray.700", "white");
   const inputBg = useColorModeValue("white", "gray.800");
@@ -142,50 +149,80 @@ function Academic() {
             value={searchTerm}
           />
         </InputGroup>
-        <Flex alignSelf="flex-end" marginLeft="75%">
-          <SimpleGrid
-            alignSelf={{ sm: "center", md: "flex-end" }}
-            columns={{ sm: 1, md: 3, xl: 3 }}
-            gap={5}
-          >
-            <Box>
+
+        <SimpleGrid
+          alignSelf={{ sm: "center", md: "flex-end" }}
+          columns={{ sm: 1, md: 2, xl: 2 }}
+        >
+          <Box>
+            <Button
+              minWidth={{ sm: "75vw", md: "fit-content" }}
+              onClick={onToggle}
+              colorScheme="orange"
+              variant="solid"
+              mb={{ sm: "1em", md: "0em" }}
+            >
+              Bulk Upload
+            </Button>
+          </Box>
+          <Box>
+            <CSVLink data={data2}>
               <Button
                 minWidth={{ sm: "75vw", md: "fit-content" }}
-                onClick={onToggle}
                 colorScheme="orange"
                 variant="solid"
+                onClick={() =>
+                  toast({
+                    title: "Report Downloaded Successfully",
+                    status: "success",
+                    duration: 9000,
+                    position: "top",
+                    isClosable: true,
+                  })
+                }
               >
-                Bulk Upload
+                Download Report
               </Button>
-
-              <CSVLink data={data2}>
-                <Button
-                  minWidth={{ sm: "75vw", md: "fit-content" }}
-                  onClick="m"
-                  colorScheme="orange"
-                  variant="solid"
-                >
-                  Download Report
-                </Button>
-              </CSVLink>
-            </Box>
-          </SimpleGrid>
-        </Flex>
+            </CSVLink>
+          </Box>
+        </SimpleGrid>
       </Card>
       <Collapse in={isOpen} animateOpacity>
         <Card color="white" mb="4" bg="orange.300" rounded="md" shadow="md">
           <Input width="50%" type="file" onChange={onFileChange} />
-          <Button
-            onClick={() => {
-              onToggle();
-            }}
-            ms="4"
-            marginTop="2"
-            bg="gray.700"
-            width="fit-content"
-          >
-            Confirm
-          </Button>
+          <Flex>
+            {" "}
+            <Button
+              onClick={() => {
+                onFileUpload();
+                onToggle();
+                toast({
+                  title: "Uploaded Successfully",
+                  status: "success",
+                  duration: 9000,
+                  position: "top",
+                  isClosable: true,
+                });
+              }}
+              ms="4"
+              marginTop="2"
+              bg="gray.700"
+              width="fit-content"
+            >
+              Confirm
+            </Button>
+            <Button
+              onClick={() => {
+                saveAs(server_URL + "download_template", "template.xlsx");
+              }}
+              ms="4"
+              marginTop="2"
+              bg="gray.700"
+              width="fit-content"
+            >
+              Download Template
+            </Button>
+          </Flex>
         </Card>
       </Collapse>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
@@ -244,7 +281,6 @@ function Academic() {
         </CardBody>
       </Card>
     </Flex>
-    //test
   );
 }
 

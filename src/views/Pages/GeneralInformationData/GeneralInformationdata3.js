@@ -29,11 +29,11 @@ function GeneralInformationdata({ location }) {
 
   let params = new URLSearchParams();
   params.append("RollNumber", localStorage.getItem("generalStudent"));
-useEffect(async () => {
-  axios.post(server_URL + "GeneralData", params).then((items) => {
-    setData(items.data);
-  });
-}, []);
+  useEffect(async () => {
+    axios.post(server_URL + "GeneralData", params).then((items) => {
+      setData(items.data);
+    });
+  }, []);
 
   const textColor = useColorModeValue("gray.700", "white");
   var GData = TableRow2;
@@ -581,7 +581,7 @@ useEffect(async () => {
                       );
                     })}
                   </Tr>
-                  <Tr>
+                  {/* <Tr>
                     {data.map((item) => {
                       return (
                         <GData
@@ -610,7 +610,7 @@ useEffect(async () => {
                         />
                       );
                     })}
-                  </Tr>
+                  </Tr> */}
                 </Tbody>
               </Table>
             </CardBody>

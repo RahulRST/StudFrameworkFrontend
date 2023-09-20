@@ -34,33 +34,18 @@ function ExtraCurricularData() {
   var [drop3, setDrop3] = useState(false);
   var [drop4, setDrop4] = useState(false);
 
-  const [Cdata, setCdata] = useState([]);
-  const [Odata, setOdata] = useState([]);
-  const [Sdata, setSdata] = useState([]);
-  const [Fdata, setFdata] = useState([]);
+  const [data, setdata] = useState([[], [], [], []]);
+
+  const Null_message = "NULL";
 
   const textColor = useColorModeValue("gray.700", "white");
+  useEffect(() => {
   let params = new URLSearchParams();
   params.append("RollNumber", localStorage.getItem("generalStudent"));
   localStorage.setItem("firsttime", "yes");
-  useEffect(async () => {
-    let params = new URLSearchParams();
-    params.append("RollNumber", localStorage.getItem("generalStudent"));
-    localStorage.setItem("firsttime", "yes");
-    axios
-      .all([
-        axios.post(server_URL + "ExtraClubCADisplay", params),
-        axios.post(server_URL + "ExtraOutreachCADisplay", params),
-        axios.post(server_URL + "ExtraSportsCADisplay", params),
-        axios.post(server_URL + "ExtraCulturalCADisplay", params),
-      ])
-      .then(
-        axios.spread((data1, data2, data3, data4) => {
-          setCdata(data1.data);
-          setOdata(data2.data);
-          setSdata(data3.data);
-          setFdata(data4.data);
-        }))
+  axios.post(server_URL + "temp", params).then((items) => {
+    setdata(items.data);
+  });
   }, []);
 
   return (
@@ -130,19 +115,23 @@ function ExtraCurricularData() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {Cdata.map((items) => {
-                    return (
-                      <ExtraCurricualarTableRow1
-                        id={items.s_no}
-                        row1={items.club_name}
-                        row2={items.activity_name}
-                        row3={items.date}
-                        row4={items.outcome}
-                        row5={items.credits}
-                        row6={items.verified}
-                      />
-                    );
-                  })}
+                  {data[0] != undefined ? (
+                    data[0].map((items) => {
+                      return (
+                        <ExtraCurricualarTableRow1
+                          id={items.s_no || Null_message}
+                          row1={items.club_name || Null_message}
+                          row2={items.activity_name || Null_message}
+                          row3={items.date || Null_message}
+                          row4={items.outcome || Null_message}
+                          row5={items.credits || Null_message}
+                          row6={items.verified || Null_message}
+                        />
+                      );
+                    })
+                  ) : (
+                    <ExtraCurricualarTableRow3 />
+                  )}
                 </Tbody>
               </Table>
             </CardBody>
@@ -180,18 +169,22 @@ function ExtraCurricularData() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {Odata.map((item) => {
-                    return (
-                      <ExtraCurricualarTableRow2
-                        id={item.s_no}
-                        row1={item.activity_name}
-                        row2={item.date}
-                        row3={item.outcome}
-                        row4={item.credits}
-                        row5={item.verified}
-                      />
-                    );
-                  })}
+                  {data[1] != undefined ? (
+                    data[1].map((item) => {
+                      return (
+                        <ExtraCurricualarTableRow2
+                          id={item.s_no || Null_message}
+                          row1={item.outreach_activity_name || Null_message}
+                          row2={item.outreach_date || Null_message}
+                          row3={item.outreach_outcome || Null_message}
+                          row4={item.credits || Null_message}
+                          row5={item.outreach_verified || Null_message}
+                        />
+                      );
+                    })
+                  ) : (
+                    <ExtraCurricualarTableRow3 />
+                  )}
                 </Tbody>
               </Table>
             </CardBody>
@@ -230,19 +223,23 @@ function ExtraCurricularData() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {Sdata.map((row) => {
-                    return (
-                      <ExtraCurricualarTableRow3
-                        id={row.s_no}
-                        row1={row.sport_name}
-                        row2={row.representation}
-                        row3={row.position_secures}
-                        row4={row.date}
-                        row5={row.credits}
-                        row6={row.verified}
-                      />
-                    );
-                  })}
+                  {data[2] != undefined ? (
+                    data[2].map((row) => {
+                      return (
+                        <ExtraCurricualarTableRow3
+                          id={row.s_no || Null_message}
+                          row1={row.sport_name || Null_message}
+                          row2={row.representation || Null_message}
+                          row3={row.position_secures || Null_message}
+                          row4={row.date || Null_message}
+                          row5={row.credits || Null_message}
+                          row6={row.verified || Null_message}
+                        />
+                      );
+                    })
+                  ) : (
+                    <ExtraCurricualarTableRow3 />
+                  )}
                 </Tbody>
               </Table>
             </CardBody>
@@ -280,18 +277,22 @@ function ExtraCurricularData() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {Fdata.map((row) => {
-                    return (
-                      <ExtraCurricualarTableRow4
-                        id={row.s_no}
-                        row1={row.event_name}
-                        row2={row.date}
-                        row3={row.position_secures}
-                        row4={row.credits}
-                        row5={row.verified}
-                      />
-                    );
-                  })}
+                  {data[3] != undefined ? (
+                    data[3].map((row) => {
+                      return (
+                        <ExtraCurricualarTableRow4
+                          id={row.s_no || Null_message}
+                          row1={row.event_name || Null_message}
+                          row2={row.date || Null_message}
+                          row3={row.position_secures || Null_message}
+                          row4={row.credits || Null_message}
+                          row5={row.verified || Null_message}
+                        />
+                      );
+                    })
+                  ) : (
+                    <ExtraCurricualarTableRow4 />
+                  )}
                 </Tbody>
               </Table>
             </CardBody>

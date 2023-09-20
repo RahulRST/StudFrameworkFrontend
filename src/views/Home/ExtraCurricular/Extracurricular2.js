@@ -1,3 +1,5 @@
+/** @format */
+
 //HoD Extracurricular
 
 import React, { useState, useEffect } from "react";
@@ -18,6 +20,7 @@ import {
   InputGroup,
   InputLeftElement,
   SimpleGrid,
+  useToast,
   Box,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
@@ -29,21 +32,26 @@ import StudentListExtraCurricular from "components/Tables/StudentList/StudentLis
 import { server_URL } from "controller/urls_config";
 
 var data2 = [];
+var Loader = require("react-loader");
 
 import { CSVLink } from "react-csv";
 
 function Extracurricular() {
+  // Toast var
+  const toast = useToast();
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerm1, setSearchTerm1] = useState("");
+  const [Loaded, setLoading] = useState(false);
 
   let params = new URLSearchParams();
+  params.append("batch", "None");
   params.append("dept", localStorage.getItem("dept"));
 
   useEffect(async () => {
-    axios.post(server_URL + "ExtracurricularHOD", params).then((items) => {
+    axios.post(server_URL + "ExtracurricularCA", params).then((items) => {
       setData(items.data);
-      console.log(items.data);
+      setLoading(true);
     });
   }, []);
   const textColor = useColorModeValue("gray.700", "white");
@@ -73,6 +81,7 @@ function Extracurricular() {
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Loader color="#FBD38D" height={10} width={10} loaded={Loaded} />
       <Card mb="1rem">
         <CardBody>
           <Flex flexDirection="column" align="center" justify="center" w="100%">
@@ -189,7 +198,15 @@ function Extracurricular() {
             <Button
               minWidth="fit-content"
               mt="1em"
-              onClick="m"
+              onClick={() =>
+                toast({
+                  title: "Report Downloaded Successfully",
+                  status: "success",
+                  duration: 9000,
+                  position: "top",
+                  isClosable: true,
+                })
+              }
               colorScheme="orange"
               variant="solid"
             >

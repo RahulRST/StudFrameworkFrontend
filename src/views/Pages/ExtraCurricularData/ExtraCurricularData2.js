@@ -38,6 +38,8 @@ function ExtraCurricularData() {
 
   const textColor = useColorModeValue("gray.700", "white");
 
+  const Null_message = "NULL";
+
   const [Cdata, setCdata] = useState([]);
   const [Odata, setOdata] = useState([]);
   const [Sdata, setSdata] = useState([]);
@@ -64,7 +66,6 @@ function ExtraCurricularData() {
         })
       );
   }, []);
-  console.log(Cdata);
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "65px" }}>
@@ -133,13 +134,13 @@ function ExtraCurricularData() {
                   {Cdata.map((item) => {
                     return (
                       <ExtraCurricualarTableRow1
-                        id={item.s_no}
-                        row1={item.club_name}
-                        row2={item.activity_name}
-                        row3={item.date}
-                        row4={item.outcome}
-                        row5={item.credits}
-                        row6={item.verified}
+                        id={item.s_no || Null_message}
+                        row1={item.club_name || Null_message}
+                        row2={item.activity_name || Null_message}
+                        row3={item.date || Null_message}
+                        row4={item.outcome || Null_message}
+                        row5={item.credits || Null_message}
+                        row6={item.verified || Null_message}
                       />
                     );
                   })}
@@ -180,12 +181,12 @@ function ExtraCurricularData() {
                   {Odata.map((item) => {
                     return (
                       <ExtraCurricualarTableRow2
-                        id={item.s_no}
-                        row1={item.activity_name}
-                        row2={item.date}
-                        row3={item.outcome}
-                        row4={item.credits}
-                        row5={item.verified}
+                        id={item.s_no || Null_message}
+                        row1={item.outreach_activity_name || Null_message}
+                        row2={item.outreach_date || Null_message}
+                        row3={item.outreach_outcome || Null_message}
+                        row4={item.credits || Null_message}
+                        row5={item.outreach_verified || Null_message}
                       />
                     );
                   })}
@@ -227,12 +228,12 @@ function ExtraCurricularData() {
                   {Sdata.map((row) => {
                     return (
                       <ExtraCurricualarTableRow3
-                        row1={row.sport_name}
-                        row2={row.representation}
-                        row3={row.position_secures}
-                        row4={row.date}
-                        row5={row.credits}
-                        row6={row.verified}
+                        row1={row.sport_name || Null_message}
+                        row2={row.representation || Null_message}
+                        row3={row.position_secures || Null_message}
+                        row4={row.date || Null_message}
+                        row5={row.credits || Null_message}
+                        row6={row.verified || Null_message}
                       />
                     );
                   })}
@@ -273,11 +274,11 @@ function ExtraCurricularData() {
                   {CUdata.map((row) => {
                     return (
                       <ExtraCurricualarTableRow4
-                        row1={row.event_name}
-                        row2={row.date}
-                        row3={row.position_secures}
-                        row4={row.credits}
-                        row5={row.verified}
+                        row1={row.event_name || Null_message}
+                        row2={row.date || Null_message}
+                        row3={row.position_secures || Null_message}
+                        row4={row.credits || Null_message}
+                        row5={row.verified || Null_message}
                       />
                     );
                   })}

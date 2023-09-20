@@ -1,9 +1,14 @@
+/** @format */
+
 //Official Dashboard/General
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CSVLink } from "react-csv";
+
 var data2 = [];
+
+var Loader = require("react-loader");
 import SignIn from "../../Pages/SignIn";
 
 // Chakra imports
@@ -21,10 +26,12 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  useDisclosure,
   SimpleGrid,
   Box,
+  useToast,
+  Select,
 } from "@chakra-ui/react";
+
 import { SearchIcon } from "@chakra-ui/icons";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -34,21 +41,57 @@ import GeneralParticularstablerow from "components/Tables/StudentList/StudentLis
 
 import { server_URL } from "controller/urls_config";
 
+// Loading var
+var is_loading = true;
+
 function GeneralInformation3() {
   const [data, setData] = useState([]);
+  const [data3, setData3] = useState([]);
+  const [data4, setData4] = useState([]);
+  const [Loaded, setLoading] = useState(false);
+
   let params = new URLSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerm1, setSearchTerm1] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
 
+  // Toast var
+  const toast = useToast();
+
   params.append("department", localStorage.getItem("dept"));
-  // console.log("AUTH TOKEN", localStorage.getItem("auth_token"));
   let auth_token = localStorage.getItem("auth_token");
+
+  // useEffect(async () => {
+  //   axios.post(server_URL + "GeneralOfficial", params).then((items) => {
+  //     setData(items.data);
+  //     setLoading(true);
+  //   });
+
+  // });
+
+  // useEffect(async () => {
+  // axios.post(server_URL + "GeneralOfficialDepartment",params).then((items) => {
+  //   setData3(items.data3);
+  //   });
+  // });
+
   useEffect(async () => {
-    axios.post(server_URL + "GeneralOfficial", params).then((items) => {
-      setData(items.data);
-    });
+    axios
+      .all([
+        axios.post(server_URL + "GeneralOfficial", params),
+        axios.post(server_URL + "GeneralOfficialDepartment", params),
+        axios.post(server_URL + "GeneralOfficialBatch", params),
+      ])
+      .then(
+        axios.spread((data, data3, data4) => {
+          setData(data.data);
+          setData3(data3.data);
+          setData4(data4.data);
+          setLoading(true);
+        })
+      );
   }, []);
+
   data2 = data.filter((item) => {
     if (searchTerm2 == "" && searchTerm == "" && searchTerm1 == "") {
       return item;
@@ -91,6 +134,7 @@ function GeneralInformation3() {
   if (auth_token != -1) {
     return (
       <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+        <Loader color="#FBD38D" height={10} width={10} loaded={Loaded} />
         <Card mb="1rem">
           <CardBody>
             <Flex
@@ -108,11 +152,11 @@ function GeneralInformation3() {
             <Box>
               <CardHeader mt="1em">
                 <Text fontSize="lg" color={textColor} fontWeight="semi">
-                  Search Department
+                  Select Department
                 </Text>
               </CardHeader>
 
-              <InputGroup
+              {/* <InputGroup
                 bg={inputBg}
                 mt="1rem"
                 borderRadius="15px"
@@ -153,17 +197,29 @@ function GeneralInformation3() {
                   borderRadius="inherit"
                   value={searchTerm2}
                 />
-              </InputGroup>
+              </InputGroup> */}
+
+              <Select
+                mt="1em"
+                bg={inputBg}
+                placeholder="Department"
+                id="dept"
+                onChange={(e) => setSearchTerm2(e.target.value)}
+              >
+                {data3.map((data) => {
+                  return <option value={data.dept}>{data.dept}</option>;
+                })}
+              </Select>
             </Box>
 
             <Box>
               <CardHeader mt="1em">
                 <Text fontSize="lg" color={textColor} fontWeight="semi">
-                  Search Batch
+                  Select Batch
                 </Text>
               </CardHeader>
 
-              <InputGroup
+              {/* <InputGroup
                 bg={inputBg}
                 mt="1rem"
                 borderRadius="15px"
@@ -204,7 +260,18 @@ function GeneralInformation3() {
                   borderRadius="inherit"
                   value={searchTerm1}
                 />
-              </InputGroup>
+              </InputGroup> */}
+              <Select
+                mt="1em"
+                bg={inputBg}
+                placeholder="Batch"
+                id="batch"
+                onChange={(e) => setSearchTerm1(e.target.value)}
+              >
+                {data4.map((data) => {
+                  return <option value={data.batch}>{data.batch}</option>;
+                })}
+              </Select>
             </Box>
 
             <Box>
@@ -262,10 +329,18 @@ function GeneralInformation3() {
               <Button
                 minWidth="fit-content"
                 mt="1em"
-                onClick="m"
                 colorScheme="orange"
                 alignSelf="flex-end"
                 variant="solid"
+                onClick={() =>
+                  toast({
+                    title: "Report Downloaded Successfully",
+                    status: "success",
+                    duration: 9000,
+                    position: "top",
+                    isClosable: true,
+                  })
+                }
               >
                 Download Report
               </Button>

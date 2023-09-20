@@ -1,9 +1,16 @@
+/** @format */
+
 //HoD Dashboard/General
 
 import React, { useState, useEffect } from "react";
+
 import axios from "axios";
 import { CSVLink } from "react-csv";
+
+// loader and global vars
+var Loader = require("react-loader");
 var data2 = [];
+
 import SignIn from "../../Pages/SignIn";
 
 // Chakra imports
@@ -21,11 +28,13 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  useDisclosure,
   SimpleGrid,
   Box,
+  useToast,
 } from "@chakra-ui/react";
+
 import { SearchIcon } from "@chakra-ui/icons";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -35,19 +44,27 @@ import GeneralParticularstablerow from "components/Tables/StudentList/StudentLis
 import { server_URL } from "controller/urls_config";
 
 function GeneralInformationHOD() {
-  const [data, setData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchTerm1, setSearchTerm1] = useState("");
+  const [Loaded, setLoading] = useState(false),
+    [data, setData] = useState([]),
+    [searchTerm, setSearchTerm] = useState(""),
+    [searchTerm1, setSearchTerm1] = useState("");
+
+  // Toast var
+  const toast = useToast();
+
   let params = new URLSearchParams();
+  let auth_token = localStorage.getItem("auth_token");
+
   params.append("department", localStorage.getItem("dept"));
 
-  // console.log("AUTH TOKEN", localStorage.getItem("auth_token"));
-  let auth_token = localStorage.getItem("auth_token");
   useEffect(async () => {
     axios.post(server_URL + "GeneralHOD", params).then((items) => {
       setData(items.data);
+      setLoading(true);
     });
   }, []);
+
+  // Filter Download Updates
   data2 = data.filter((item) => {
     if (searchTerm == "" && searchTerm1 == "") {
       return item;
@@ -67,7 +84,8 @@ function GeneralInformationHOD() {
       }
     }
   });
-  console.log(data2);
+
+  // Styles
   const textColor = useColorModeValue("gray.700", "white");
   const inputBg = useColorModeValue("white", "gray.800");
   const mainorange = useColorModeValue("orange.300", "orange.300");
@@ -76,6 +94,7 @@ function GeneralInformationHOD() {
   if (auth_token != -1) {
     return (
       <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+        <Loader color="#FBD38D" height={10} width={10} loaded={Loaded} />
         <Card mb="1rem">
           <CardBody>
             <Flex
@@ -196,10 +215,18 @@ function GeneralInformationHOD() {
               <Button
                 minWidth="fit-content"
                 mt="1em"
-                onClick="m"
                 colorScheme="orange"
                 alignSelf="flex-end"
                 variant="solid"
+                onClick={() =>
+                  toast({
+                    title: "Report Downloaded Successfully",
+                    status: "success",
+                    duration: 9000,
+                    position: "top",
+                    isClosable: true,
+                  })
+                }
               >
                 Download Report
               </Button>

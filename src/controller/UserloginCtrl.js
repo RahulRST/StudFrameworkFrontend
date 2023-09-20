@@ -1,10 +1,19 @@
+/** @format */
+
 import axios from "axios";
 import { URL, server_URL } from "./urls_config";
+
+function other_users_check(email_id) {
+  // Add official keywords
+  let keywords = ["hod", "advisor", "iqac", "dean", "principal", "admin"];
+  const result = keywords.filter((word) => email_id.includes(word));
+  return result.length != 0 ? true : false;
+}
 
 export default function handleLogin() {
   const loginButton = document.getElementById("login_btn");
   loginButton.disabled = true;
-  loginButton.innerHTML = `<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>`;
+  loginButton.innerHTML = `<div class="spinner1"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>`;
   document.getElementById("pass-fail").style.display = "none";
   document.getElementById("email-fail").style.display = "none";
   document.getElementById("server-fail").style.display = "none";
@@ -13,17 +22,21 @@ export default function handleLogin() {
   params.append("email", document.getElementById("emailId").value);
   params.append("password", document.getElementById("password").value);
 
+  let email = document.getElementById("emailId").value;
+
   axios.post(server_URL + "userlogin", params).then((result) => {
     // Check 1: email belongs to licet domain and user not present
+    // console.log(result.data);
     if (
       result.data == "user-fail" &&
-      document.getElementById("emailId").value.includes("@licet.ac.in")
+      email.includes("@licet.ac.in") &&
+      !other_users_check(email)
     ) {
       window.location.href = URL + "Student#/auth/GeneralInformationdata";
     }
 
     // Check 2: invalid user
-    else if (result.data === "user-fail") {
+    if (result.data === "user-fail") {
       document.getElementById("email-fail").style.display = "block";
       localStorage.setItem("auth_token", -1);
       loginButton.disabled = false;
@@ -46,23 +59,34 @@ export default function handleLogin() {
     }
     // Logged In
     else {
-      console.log("Logged In");
+      // console.log("Logged In");
       var check = result.data[0];
-      console.log(check);
+
       if (check.user_type == 2) {
+        localStorage.setItem("user_type", "hod");
         localStorage.setItem("dept", check.dept);
-        window.location.href = URL + "HoD#/admin2/GeneralInformation";
+        localStorage.setItem("hodemail", check.email);
+        window.location.href = URL + "HoD#/admin2/dashboard";
       } else if (check.user_type == 1) {
+        localStorage.setItem("user_type", "class_advisor");
         localStorage.setItem("batch", check.batch);
         localStorage.setItem("dept", check.dept);
-        window.location.href = URL + "Class-Advisor#/admin1/GeneralInformation";
+        localStorage.setItem("caemail", check.email);
+        window.location.href = URL + "Class-Advisor#/admin1/dashboard";
       } else if (check.user_type == 3) {
-        window.location.href = URL + "LICET#/admin3/GeneralInformation";
+        localStorage.setItem("user_type", "official");
+        localStorage.setItem("offemail", check.email);
+        window.location.href = URL + "LICET#/admin3/dashboard";
+      } else if (check.user_type == 4) {
+        localStorage.setItem("user_type", "admin");
+        localStorage.setItem("hodemail", check.email);
+        window.location.href = URL + "Admin#/admin4/dashboard";
       } else if (check.user_type == 0) {
         if (check.roll_no == null) {
-          console.log(check.roll_no);
+          localStorage.setItem("useremail", check.email);
           window.location.href = URL + "Student#/auth/GeneralInformationdata";
         } else {
+          localStorage.setItem("user_type", "student");
           localStorage.setItem("StudentRoll", check.roll_no);
           window.location.href = URL + "Student#/admin0/GeneralInformation";
         }

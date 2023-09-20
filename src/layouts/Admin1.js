@@ -28,6 +28,7 @@ export default function Dashboard(props) {
   // functions for changing the states from components
 
   let auth_token = localStorage.getItem("auth_token");
+  let user_type = localStorage.getItem("user_type");
 
   const getRoute = () => {
     return window.location.pathname !== "/admin1/full-screen-maps";
@@ -169,7 +170,7 @@ export default function Dashboard(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   // Chakra Color Mode
 
-  if (auth_token != -1) {
+  if (auth_token != -1 && user_type == "class_advisor") {
     return (
       <ChakraProvider theme={theme} resetCss={false}>
         <Sidebar
@@ -227,6 +228,8 @@ export default function Dashboard(props) {
       </ChakraProvider>
     );
   } else {
+    localStorage.setItem("auth_token", -1);
+
     return <Redirect to="/auth/SignIn" />;
   }
 }

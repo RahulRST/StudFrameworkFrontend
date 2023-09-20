@@ -21,6 +21,11 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 
+import Academictablerow from "components/Tables/AcademicTableRow/Academictablerow3";
+import Academicsummarytablerow from "components/Tables/AcademicTableRow/AcademicSummaryTableRow/Academicsummarytablerow3";
+
+import { AcademicSummary } from "variables/general";
+import { Academicinfo } from "variables/general";
 import axios from "axios";
 
 import { server_URL } from "controller/urls_config";
@@ -43,9 +48,6 @@ function Academicdata() {
             (header) =>
               header.COLUMN_NAME != "id" && header.COLUMN_NAME != "roll_no"
           );
-          filtered_data.reverse();
-
-          console.log(data2);
           let student_data = [];
           for (var i = 0; i < data2.data.length; i++) {
             let student = Object.values(data2.data[i]);

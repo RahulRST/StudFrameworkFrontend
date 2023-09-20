@@ -16,6 +16,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useColorModeValue,
+  useToast,
   useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -24,6 +25,8 @@ import React from "react";
 import { server_URL } from "controller/urls_config";
 
 function ProfessionalDevelopmentTableRow(props) {
+  // Toast var
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { id, row1, row2, row3, row4, row5 } = props;
@@ -35,16 +38,24 @@ function ProfessionalDevelopmentTableRow(props) {
     params.append("columnid", cid.id);
     params.append("industry_name", document.getElementById("IndustryID").value);
     params.append("date", document.getElementById("Date_and_year").value);
-    params.append("utcome", document.getElementById("OutcomeID").value);
+    params.append("outcome", document.getElementById("OutcomeID").value);
     params.append("credits", document.getElementById("credits").value);
-    axios.post(server_URL + "Industrialv_edit", params);
+    axios.post(server_URL + "Industrialv_edit", params).then((results)=>{
+      if(results){
+        window.location.reload(false);
+      }
+    });
   }
 
   function fundelete() {
     let cid = { id };
     let params = new URLSearchParams();
     params.append("columnid", cid.id);
-    axios.post(server_URL + "Industrialv_delete", params);
+    axios.post(server_URL + "Industrialv_delete", params).then((results)=>{
+      if(results){
+        window.location.reload(false);
+      }
+    });
   }
 
   function funverify() {
@@ -52,7 +63,11 @@ function ProfessionalDevelopmentTableRow(props) {
     let params = new URLSearchParams();
     params.append("columnid", cid.id);
     params.append("verify", "Verified");
-    axios.post(server_URL + "Industrialv_verify", params);
+    axios.post(server_URL + "Industrialv_verify", params).then((results)=>{
+      if(results){
+        window.location.reload(false);
+      }
+    });
   }
 
   return (
@@ -66,7 +81,7 @@ function ProfessionalDevelopmentTableRow(props) {
           </Flex>
         </Flex>
       </Td>
-      <Td minWidth={{ sm: "8em" }}>
+      <Td minWidth={{ sm: "10em" }}>
         <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
           <Flex direction="column">{row2}</Flex>
         </Flex>
@@ -76,7 +91,7 @@ function ProfessionalDevelopmentTableRow(props) {
           <Flex direction="column">{row3}</Flex>
         </Flex>
       </Td>
-      <Td minWidth={{ sm: "5em" }}>
+      <Td minWidth={{ sm: "10em" }}>
         <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
           <Flex direction="column">{row4}</Flex>
         </Flex>
@@ -171,6 +186,13 @@ function ProfessionalDevelopmentTableRow(props) {
                 colorScheme="blue"
                 mr={3}
                 onClick={() => {
+                  toast({
+                    title: "Edited Successfully",
+                    status: "success",
+                    duration: 9000,
+                    position: "top",
+                    isClosable: true,
+                  });
                   funedit();
                   onClose();
                 }}

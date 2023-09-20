@@ -26,16 +26,16 @@
   border-radius: 100vw;
 }
 
-.spinner {
+.spinner1 {
   margin: auto;
   width: 70px;
   text-align: center;
 }
 
-.spinner > div {
+.spinner1 > div {
   width: 18px;
   height: 18px;
-  background-color: #12006d;
+  background-color: white;
 
   border-radius: 100%;
   display: inline-block;
@@ -43,12 +43,12 @@
   animation: sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
-.spinner .bounce1 {
+.spinner1 .bounce1 {
   -webkit-animation-delay: -0.32s;
   animation-delay: -0.32s;
 }
 
-.spinner .bounce2 {
+.spinner1 .bounce2 {
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
 }

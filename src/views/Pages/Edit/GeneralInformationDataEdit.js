@@ -21,6 +21,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
+  useToast,
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -33,6 +34,9 @@ import { server_URL, URL } from "controller/urls_config";
 
 function GeneralInformationDataEdit(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Toast var
+  const toast = useToast();
 
   var roll_no,
     reg_no,
@@ -126,11 +130,10 @@ function GeneralInformationDataEdit(props) {
 
   let params = new URLSearchParams();
   params.append("RollNumber", localStorage.getItem("generalStudent"));
-  useEffect(() => {
-    axios.post(server_URL + "GeneralData", params).then((items) => {
-      setData(items.data);
-    });
-  }, []);
+
+  axios.post(server_URL + "GeneralData", params).then((items) => {
+    setData(items.data);
+  });
   data.map((item) => {
     (sname = item.sname),
       (roll_no = item.roll_no),
@@ -223,102 +226,154 @@ function GeneralInformationDataEdit(props) {
   });
   function funedit() {
     let params = new URLSearchParams();
+
+    // Roll number
     params.append("RollNumber", localStorage.getItem("generalStudent"));
-    if (document.getElementById("NID").value.length !== 0) {
-      params.append("name", document.getElementById("NID").value);
-    } else {
-      params.append("name", sname);
-    }
-    if (document.getElementById("REID").value.length !== 0) {
-      params.append("registerno", document.getElementById("REID").value);
-    } else {
-      params.append("registerno", reg_no);
-    }
-    if (document.getElementById("SID").value.length !== 0) {
-      params.append("sex", document.getElementById("SID").value);
-    } else {
-      params.append("sex", gender);
-    }
-    if (document.getElementById("DOBID").value.length !== 0) {
-      params.append("dateofbirth", document.getElementById("DOBID").value);
-    } else {
-      params.append("dateofbirth", dob);
-    }
-    if (document.getElementById("DEPT").value.length !== 0) {
-      params.append("dep", document.getElementById("DEPT").value);
-    } else {
-      params.append("dep", dept);
-    }
-    if (document.getElementById("BATCH").value.length !== 0) {
-      params.append("bat", document.getElementById("BATCH").value);
-    } else {
-      params.append("bat", batch);
-    }
-    if (document.getElementById("NATIONID").value.length !== 0) {
-      params.append("nationality", document.getElementById("NATIONID").value);
-    } else {
-      params.append("nationality", nationality);
-    }
-    if (document.getElementById("RELIGIONID").value.length !== 0) {
-      params.append("religion", document.getElementById("RELIGIONID").value);
-    } else {
-      params.append("religion", religion);
-    }
-    if (document.getElementById("PARISHID").value.length !== 0) {
-      params.append("parish", document.getElementById("PARISHID").value);
-    } else {
-      params.append("parish", if_catholic_parish);
-    }
-    if (document.getElementById("DALITID").value.length !== 0) {
-      params.append("dalit", document.getElementById("DALITID").value);
-    } else {
-      params.append("dalit", dalit_catholic_yn);
-    }
-    if (document.getElementById("COMMUNITYID").value.length !== 0) {
-      params.append("community", document.getElementById("COMMUNITYID").value);
-    } else {
-      params.append("community", community);
-    }
-    if (document.getElementById("BLOODID").value.length !== 0) {
-      params.append("bloodgroup", document.getElementById("BLOODID").value);
-    } else {
-      params.append("bloodgroup", blood_group);
-    }
-    if (document.getElementById("AADHARID").value.length !== 0) {
-      params.append("aadhar", document.getElementById("AADHARID").value);
-    } else {
-      params.append("aadhar", aadhar_no);
-    }
-    if (document.getElementById("MOTHERID").value.length !== 0) {
-      params.append("mothertongue", document.getElementById("MOTHERID").value);
-    } else {
-      params.append("mothertongue", mother_tongue);
-    }
-    if (document.getElementById("CONTACTID").value.length !== 0) {
-      params.append("contact", document.getElementById("CONTACTID").value);
-    } else {
-      params.append("contact", contact_no);
-    }
-    if (document.getElementById("PEREMID").value.length !== 0) {
-      params.append("peremail", document.getElementById("PEREMID").value);
-    } else {
-      params.append("peremail", email);
-    }
-    if (document.getElementById("PREADDRID").value.length !== 0) {
-      params.append("preaddr", document.getElementById("PREADDRID").value);
-    } else {
-      params.append("preaddr", present_address);
-    }
-    if (document.getElementById("PERADDRID").value.length !== 0) {
-      params.append("peraddr", document.getElementById("PERADDRID").value);
-    } else {
-      params.append("peraddr", permanent_address);
-    }
-    if (document.getElementById("LANKNOW").value.length !== 0) {
-      params.append("langknow", document.getElementById("LANKNOW").value);
-    } else {
-      params.append("langknow", lang_know);
-    }
+
+    // Name
+    params.append(
+      "name",
+      document.getElementById("NID").value.length !== 0
+        ? document.getElementById("NID").value
+        : sname
+    );
+
+    // Register Number
+    params.append(
+      "registerno",
+      document.getElementById("REID").value.length !== 0
+        ? document.getElementById("REID").value
+        : reg_no
+    );
+
+    // sex
+    params.append(
+      "sex",
+      document.getElementById("SID").value.length !== 0
+        ? document.getElementById("SID").value
+        : reg_no
+    );
+
+    // Date of Birth
+    params.append(
+      "dateofbirth",
+      document.getElementById("DOBID").value.length !== 0
+        ? document.getElementById("DOBID").value
+        : dob
+    );
+
+    // Department
+    params.append(
+      "dep",
+      document.getElementById("DEPT").value.length !== 0
+        ? document.getElementById("DEPT").value
+        : dept
+    );
+
+    // Batch
+    params.append(
+      "batt",
+      document.getElementById("BATCH").value.length !== 0
+        ? document.getElementById("BATCH").value
+        : batch
+    );
+
+    // Nationality
+    params.append(
+      "nationality",
+      document.getElementById("NATIONID").value.length !== 0
+        ? document.getElementById("NATIONID").value
+        : nationality
+    );
+
+    // Religion
+    params.append(
+      "religion",
+      document.getElementById("RELIGIONID").value.length !== 0
+        ? document.getElementById("RELIGIONID").value
+        : religion
+    );
+
+    // Parish
+    params.append(
+      "parish",
+      document.getElementById("PARISHID").value.length !== 0
+        ? document.getElementById("PARISHID").value
+        : if_catholic_parish
+    );
+
+    // Dalit
+    params.append(
+      "dalit",
+      document.getElementById("DALITID").value.length !== 0
+        ? document.getElementById("DALITID").value
+        : dalit_catholic_yn
+    );
+
+    // Community
+    params.append(
+      "community",
+      document.getElementById("COMMUNITYID").value.length !== 0
+        ? document.getElementById("COMMUNITYID").value
+        : community
+    );
+
+    // BloodID
+    params.append(
+      "bloodgroup",
+      document.getElementById("BLOODID").value.length !== 0
+        ? document.getElementById("BLOODID").value
+        : blood_group
+    );
+
+    // Aadhar
+    params.append(
+      "aadhar",
+      document.getElementById("AADHARID").value.length !== 0
+        ? document.getElementById("AADHARID").value
+        : aadhar_no
+    );
+
+    // Mother Tongue
+    params.append(
+      "mothertongue",
+      document.getElementById("MOTHERID").value.length !== 0
+        ? document.getElementById("MOTHERID").value
+        : mother_tongue
+    );
+
+    // Contact
+    params.append(
+      "contact",
+      document.getElementById("CONTACTID").value.length !== 0
+        ? document.getElementById("CONTACTID").value
+        : contact_no
+    );
+
+    // PEREMAIL
+    params.append(
+      "peremail",
+      document.getElementById("PEREMID").value.length !== 0
+        ? document.getElementById("PEREMID").value
+        : email
+    );
+
+    // PREADDRID
+    params.append(
+      "peraddr",
+      document.getElementById("PREADDRID").value.length !== 0
+        ? document.getElementById("PREADDRID").value
+        : permanent_address
+    );
+
+    // Languages Known
+    params.append(
+      "langknow",
+      document.getElementById("LANKNOW").value.length !== 0
+        ? document.getElementById("LANKNOW").value
+        : permanent_address
+    );
+
     if (document.getElementById("PAN").value.length !== 0) {
       params.append("pano", document.getElementById("PAN").value);
     } else {
@@ -516,26 +571,26 @@ function GeneralInformationDataEdit(props) {
     } else {
       params.append("nsib", no_of_siblings);
     }
-    if (document.getElementById("NASIB").value.length !== 0) {
-      params.append("nmsib", document.getElementById("NASIB").value);
-    } else {
-      params.append("nmsib", name_siblings);
-    }
-    if (document.getElementById("QUASIB").value.length !== 0) {
-      params.append("qsib", document.getElementById("QUASIB").value);
-    } else {
-      params.append("qsib", qualification_siblings);
-    }
-    if (document.getElementById("OCCSIB").value.length !== 0) {
-      params.append("siboc", document.getElementById("OCCSIB").value);
-    } else {
-      params.append("siboc", occupation_siblings);
-    }
-    if (document.getElementById("ALUMNILL").value.length !== 0) {
-      params.append("llalumni", document.getElementById("ALUMNILL").value);
-    } else {
-      params.append("llalumni", alumni_licet_loyola_yn);
-    }
+    // if (document.getElementById("NASIB").value.length !== 0) {
+    //   params.append("nmsib", document.getElementById("NASIB").value);
+    // } else {
+    //   params.append("nmsib", name_siblings);
+    // }
+    // if (document.getElementById("QUASIB").value.length !== 0) {
+    //   params.append("qsib", document.getElementById("QUASIB").value);
+    // } else {
+    //   params.append("qsib", qualification_siblings);
+    // }
+    // if (document.getElementById("OCCSIB").value.length !== 0) {
+    //   params.append("siboc", document.getElementById("OCCSIB").value);
+    // } else {
+    //   params.append("siboc", occupation_siblings);
+    // }
+    // if (document.getElementById("ALUMNILL").value.length !== 0) {
+    //   params.append("llalumni", document.getElementById("ALUMNILL").value);
+    // } else {
+    //   params.append("llalumni", alumni_licet_loyola_yn);
+    // }
     if (document.getElementById("APPNO").value.length !== 0) {
       params.append("apno", document.getElementById("APPNO").value);
     } else {
@@ -3214,7 +3269,7 @@ function GeneralInformationDataEdit(props) {
                       </Flex>
                     </Td>
                   </Tr>
-                  <Tr>
+                  {/* <Tr>
                     <Td minWidth={{ sm: "17rem" }}>
                       <Flex
                         align="center"
@@ -3377,7 +3432,7 @@ function GeneralInformationDataEdit(props) {
                         </Flex>
                       </Flex>
                     </Td>
-                  </Tr>
+                  </Tr> */}
                 </Tbody>
               </Table>
             </CardBody>
@@ -4448,6 +4503,13 @@ function GeneralInformationDataEdit(props) {
                     onClick={() => {
                       funedit();
                       onClose();
+                      toast({
+                        title: "Student Information Edited Successfully",
+                        status: "success",
+                        duration: 9000,
+                        position: "top",
+                        isClosable: true,
+                      });
                     }}
                   >
                     Submit

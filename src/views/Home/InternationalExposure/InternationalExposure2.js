@@ -1,3 +1,5 @@
+/** @format */
+
 //Hod International Exposure
 
 import React, { useState, useEffect } from "react";
@@ -20,8 +22,10 @@ import {
   InputGroup,
   InputLeftElement,
   SimpleGrid,
+  useToast,
   Box,
 } from "@chakra-ui/react";
+
 // Custom components
 import { SearchIcon } from "@chakra-ui/icons";
 import Card from "components/Card/Card.js";
@@ -31,18 +35,24 @@ import StudentListInternational from "components/Tables/StudentList/StudentListI
 
 import { server_URL } from "controller/urls_config";
 
+var Loader = require("react-loader");
+
 function InternationalExposure() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerm1, setSearchTerm1] = useState("");
+  const [Loaded, setLoading] = useState(false);
 
   let params = new URLSearchParams();
   params.append("dept", localStorage.getItem("dept"));
 
+  // Toast var
+  const toast = useToast();
+
   useEffect(async () => {
     axios.post(server_URL + "InternationalExpoHOD", params).then((items) => {
       setData(items.data);
-      console.log(items.data);
+      setLoading(true);
     });
   }, []);
 
@@ -65,7 +75,6 @@ function InternationalExposure() {
       }
     }
   });
-  console.log(data2);
 
   const textColor = useColorModeValue("gray.700", "white");
   const inputBg = useColorModeValue("white", "gray.800");
@@ -74,6 +83,7 @@ function InternationalExposure() {
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Loader color="#FBD38D" height={10} width={10} loaded={Loaded} />
       <Card mb="1rem">
         <CardBody>
           <Flex flexDirection="column" align="center" justify="center" w="100%">
@@ -189,10 +199,18 @@ function InternationalExposure() {
             <Button
               minWidth="fit-content"
               mt="1em"
-              onClick="m"
               colorScheme="orange"
               alignSelf="flex-end"
               variant="solid"
+              onClick={() =>
+                toast({
+                  title: "Report Downloaded Successfully",
+                  status: "success",
+                  duration: 9000,
+                  position: "top",
+                  isClosable: true,
+                })
+              }
             >
               Download Report
             </Button>

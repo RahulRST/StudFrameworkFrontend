@@ -2,7 +2,7 @@
 
 //Student Profile
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import change_pass from "../../../controller/changepassword";
 // Chakra imports
 import {
@@ -31,7 +31,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import { SettingsIcon, EditIcon } from "@chakra-ui/icons";
+import { SettingsIcon, EditIcon, WarningIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 // Custom components
@@ -128,7 +128,6 @@ function Profile() {
       change_pass();
     }
   }
-  var sname, licet_email, roll_no, dept, reg_no, batch, cell, year;
   const { isOpen, onOpen, onClose } = useDisclosure();
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
@@ -142,27 +141,27 @@ function Profile() {
   );
   const emailColor = useColorModeValue("gray.400", "gray.300");
   const [data, setData] = useState([]);
+  const [uy, setuy] = useState([]);
+  const [credits, setcredits] = useState(0);
 
-  let params = new URLSearchParams();
-  params.append("StudentDetails", localStorage.getItem("StudentRoll"));
   useEffect(async () => {
+    let params = new URLSearchParams();
+    params.append("StudentDetails", localStorage.getItem("StudentRoll"));
     axios.post(server_URL + "GeneralStudent", params).then((items) => {
-      setData(items.data);
+      var now = new Date();
+      var currentYear = parseInt(now.getFullYear());
+      let updated_year = currentYear - parseInt(items.data[0].batch.substr(0, 4));
+      updated_year = updated_year == 0 ? 1 : updated_year;
+      setData(items.data)
+      setuy(updated_year)
     });
-  }, []);
-  data.map((item) => {
-    var now = new Date();
-    var currentYear = parseInt(now.getFullYear());
-    let updated_year = currentYear - parseInt(item.batch.substr(0, 4)) + 1;
-    sname = item.sname;
-    licet_email = item.licet_email;
-    roll_no = item.roll_no;
-    dept = item.dept;
-    reg_no = item.reg_no;
-    batch = item.batch;
-    cell = item.contact_no;
-    year = updated_year >= 4 ? "Passed Out" : updated_year;
-  });
+    axios.post(server_URL + "get_credits_student", params).then((items) => {
+      if (items.data.length > 0) {
+        setcredits(items.data[0].total);
+      }
+    });
+  },[])
+
   return (
     <Flex direction="column">
       <Box
@@ -221,14 +220,14 @@ function Profile() {
                   fontWeight="bold"
                   ms={{ sm: "8px", md: "0px" }}
                 >
-                  {sname}
+                  { data.length > 0 ? data[0]['sname'] : ''}
                 </Text>
                 <Text
                   fontSize={{ sm: "sm", md: "md" }}
                   color={emailColor}
                   fontWeight="semibold"
                 >
-                  {licet_email}
+                  { data.length > 0 ? data[0]['licet_email'] : ''}
                 </Text>
               </Flex>
             </Flex>
@@ -434,18 +433,23 @@ function Profile() {
           </Flex>
         </Box>
       </Box>
+      <Card>
+        <b>
+          <Text fontSize="lg">LICET CREDITS : {credits}</Text>
+        </b>
+      </Card>
+      <br />
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} gap={5}>
         <Card p="16px" my={{ sm: "24px", xl: "0px" }}>
           <CardHeader p="12px 5px" mb="12px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Roll No.:
+              Roll No :
             </Text>
           </CardHeader>
-
           <CardBody px="5px">
             <Flex align="center" mb="18px">
               <Text fontSize="md" color="gray.500" fontWeight="400">
-                {roll_no}
+                { data.length > 0 ? data[0]['roll_no'] : '' }
               </Text>
             </Flex>
           </CardBody>
@@ -453,14 +457,14 @@ function Profile() {
         <Card p="16px" my={{ sm: "24px", xl: "0px" }}>
           <CardHeader p="12px 5px" mb="12px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Registration Number:
+              Registration Number :
             </Text>
           </CardHeader>
 
           <CardBody px="5px">
             <Flex align="center" mb="18px">
               <Text fontSize="md" color="gray.500" fontWeight="400">
-                {reg_no}
+                { data.length > 0 ? data[0]['reg_no'] : '' }
               </Text>
             </Flex>
           </CardBody>
@@ -468,14 +472,14 @@ function Profile() {
         <Card p="16px" my={{ sm: "24px", xl: "0px" }}>
           <CardHeader p="12px 5px" mb="12px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Department:
+              Department :
             </Text>
           </CardHeader>
 
           <CardBody px="5px">
             <Flex align="center" mb="18px">
               <Text fontSize="md" color="gray.500" fontWeight="400">
-                {dept}
+                { data.length > 0 ? data[0]['dept'] : '' }
               </Text>
             </Flex>
           </CardBody>
@@ -483,14 +487,14 @@ function Profile() {
         <Card p="16px" my={{ sm: "24px", xl: "0px" }}>
           <CardHeader p="12px 5px" mb="12px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Year:
+              Year :
             </Text>
           </CardHeader>
 
           <CardBody px="5px">
             <Flex align="center" mb="18px">
               <Text fontSize="md" color="gray.500" fontWeight="400">
-                {year}
+                { data.length > 0 ? uy : '' }
               </Text>
             </Flex>
           </CardBody>
@@ -498,14 +502,14 @@ function Profile() {
         <Card p="16px" my={{ sm: "24px", xl: "0px" }}>
           <CardHeader p="12px 5px" mb="12px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Batch:
+              Batch :
             </Text>
           </CardHeader>
 
           <CardBody px="5px">
             <Flex align="center" mb="18px">
               <Text fontSize="md" color="gray.500" fontWeight="400">
-                {batch}
+                { data.length > 0 ? data[0]['batch'] : '' }
               </Text>
             </Flex>
           </CardBody>
@@ -513,19 +517,20 @@ function Profile() {
         <Card p="16px" my={{ sm: "24px", xl: "0px" }}>
           <CardHeader p="12px 5px" mb="12px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Contact Number:
+              Contact Number :
             </Text>
           </CardHeader>
 
           <CardBody px="5px">
             <Flex align="center" mb="18px">
               <Text fontSize="md" color="gray.500" fontWeight="400">
-                {cell}
+                { data.length > 0 ? data[0]['contact_no'] : '' }
               </Text>
             </Flex>
           </CardBody>
         </Card>
       </SimpleGrid>
+      <br />
     </Flex>
   );
 }

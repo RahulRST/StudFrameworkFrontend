@@ -2,7 +2,7 @@
 
 //Student AcademicData
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 // Chakra imports
 import {
   Flex,
@@ -41,9 +41,6 @@ function Academicdata() {
             (header) =>
               header.COLUMN_NAME != "id" && header.COLUMN_NAME != "roll_no"
           );
-          filtered_data.reverse();
-
-          console.log(data2);
           let student_data = [];
           for (var i = 0; i < data2.data.length; i++) {
             let student = Object.values(data2.data[i]);

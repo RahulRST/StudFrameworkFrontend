@@ -1,6 +1,8 @@
+/** @format */
+
 //Student create page
 
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 // Chakra imports
 import {
@@ -17,23 +19,42 @@ import {
   FormLabel,
   Select,
   SimpleGrid,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react";
-
 // Custom components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import { Tooltip } from "@chakra-ui/react";
-
+import { useHistory } from "react-router-dom";
 import { server_URL, URL } from "controller/urls_config";
+import { useToast } from '@chakra-ui/react'
 
 function GeneralInformationdata() {
+  const toast = useToast()
+  const toastIdRef = React.useRef()
+  const history = useHistory();
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [ Message, setMessage] = useState(null);
   function logout() {
     window.location.href = URL + "Student#/auth/SignIn";
   }
 
   function funinsert() {
     let params = new URLSearchParams();
+    if (document.getElementById("RID") == 0) {
+      alert("ERROR");
+    } else {
+    }
+
     params.append("rollno", document.getElementById("RID").value);
     params.append("registerno", document.getElementById("REID").value);
     params.append("name", document.getElementById("NID").value);
@@ -66,7 +87,7 @@ function GeneralInformationdata() {
     params.append("hsesl", document.getElementById("SL1").value);
     params.append("hsegro", document.getElementById("GROUP1").value);
     params.append("hsetm", document.getElementById("TM1").value);
-    params.append("hseop", document.getElementById("OP1").value);
+    params.append("hseop", document.getElementById("OP1").value + "%");
     params.append("hsecom", document.getElementById("COM1").value);
     params.append("hsenoa", document.getElementById("NOA1").value);
 
@@ -75,7 +96,7 @@ function GeneralInformationdata() {
     params.append("sslcmoi", document.getElementById("MOI2").value);
     params.append("sslcsl", document.getElementById("SL2").value);
     params.append("sslctm", document.getElementById("TM2").value);
-    params.append("sslcop", document.getElementById("OP2").value);
+    params.append("sslcop", document.getElementById("OP2").value + "%");
     params.append("sslcnoa", document.getElementById("NOA2").value);
 
     params.append("fanam", document.getElementById("FN").value);
@@ -101,10 +122,10 @@ function GeneralInformationdata() {
     params.append("mamob", document.getElementById("MMN").value);
     params.append("maemail", document.getElementById("MEI").value);
     params.append("sibnos", document.getElementById("NOS").value);
-    params.append("sibnam", document.getElementById("NAS").value);
-    params.append("sibqul", document.getElementById("QOS").value);
-    params.append("sibocc", document.getElementById("SO").value);
-    params.append("sibalum", document.getElementById("AOL").value);
+    // params.append("sibnam", document.getElementById("NAS").value);
+    // params.append("sibqul", document.getElementById("QOS").value);
+    // params.append("sibocc", document.getElementById("SO").value);
+    // params.append("sibalum", document.getElementById("AOL").value);
 
     params.append("appno", document.getElementById("AN").value);
     params.append("doa", document.getElementById("DOA").value);
@@ -136,9 +157,138 @@ function GeneralInformationdata() {
     params.append("promemno", document.getElementById("PMNA").value);
     params.append("promemdur", document.getElementById("DUR").value);
 
-    axios.post(server_URL + "insertlogin", params);
-    axios.post(server_URL + "studentinsert", params);
-    window.location.href = URL + "Student#/auth/signin";
+    let columns_to_be_filled = [
+      "RID",
+      "NID",
+      "REID",
+      "SID",
+      "DEPT",
+      "BATCH",
+      "NATIONID",
+      "RELIGIONID",
+      "DALITID",
+      "COMMUNITYID",
+      "BLOODID",
+      "MOTHERID",
+      "CONTACTID",
+      "AADHARID",
+      "PEREMID",
+      "OFFEMID",
+      "PEREMID",
+      "PREADDRID",
+      "LANKNO",
+      "NOS1",
+      "BOARD1",
+      "MOI1",
+      "SL1",
+      "GROUP1",
+      "TM1",
+      "OP1",
+      "COM1",
+      "NOA1",
+      "NOS2",
+      "BOARD2",
+      "MOI2",
+      "SL2",
+      "TM2",
+      "OP2",
+      "NOA2",
+      "FN",
+      "FMN",
+      "MN",
+      "MMN",
+      "NOS",
+      "DOA",
+      "RL",
+      "DH",
+    ];
+
+    let mapping_columns = {
+      RID: "roll number",
+      NID: "name",
+      REID: "register number",
+      SID: "sex",
+      DEPT: "department",
+      BATCH: "batch",
+      NATIONID: "nationality",
+      RELIGIONID: "religion",
+      DALITID: "IS DALIT",
+      COMMUNITYID: "community",
+      BLOODID: "blood group",
+      MOTHERID: "mother tongue",
+      CONTACTID: "contact no",
+      AADHARID: "aadhar id",
+      PEREMID: "personal email id",
+      OFFEMAID: "official email id",
+      PREADDRID: "address",
+      LANKNO: "Languages Known",
+      FN: "Father's Name",
+      FMN: "Father's Mobile No",
+      MN: "Mother's Name",
+      MMN: "Mother's Mobile No",
+      DOA: "Date of Application",
+      RL: "Regular/Lateral Entry",
+      DH: "Day Scholar/Hosteler",
+      NOS1: "HS School Name",
+      NOS2: "10th School Name",
+      BOARD1: "Board HS",
+      BOARD2: "10th HS",
+      MOI1: "HS Medium of Instruction",
+      MOI2: "10th Medium of Instruction",
+      SL1: "Second Language in HS",
+      SL2: "Second Language in 10th",
+      GROUP1: "Group in HS",
+      GROUP2: "Group in 10th",
+      TM1: "Total Marks in HS",
+      TM2: "Total Marks in 10th",
+      OP1: "Overall Percentage in HS",
+      OP2: "Overall Percentage in 10th",
+      COM1: "Cut off Marks in HS",
+      NOA1: "No of Attempts in HS",
+      NOA2: "No of Attempts in 10th",
+    };
+
+    let not_filled_msg = "";
+    let inx = 0;
+
+    for (var inx1 = 0; inx1 < columns_to_be_filled.length; inx1++) {
+      try {
+        if (document.getElementById(columns_to_be_filled[inx1]).value == "") {
+          inx += 1;
+          not_filled_msg +=
+            inx + ". " + mapping_columns[columns_to_be_filled[inx1]] + "\n";
+        }
+      } catch {
+        alert(columns_to_be_filled[inx1]);
+      }
+    }
+
+    if (inx == 0) {
+      if (document.getElementById("CONTACTID").value.length!=12) {
+        toastIdRef.current = toast({ description: "Invalid Contact Number! ( Format : 919876543210 )", status: 'warning',isClosable: true, position:"top" })
+      } else if(document.getElementById("FMN").value.length!=12){
+        toastIdRef.current = toast({ description: "Invalid Father's Number! ( Format : 919876543210 )", status: 'warning',isClosable: true, position:"top" })
+      } else if(document.getElementById("MMN").value.length!=12){
+        toastIdRef.current = toast({ description: "Invalid Mother's Number! ( Format : 919876543210 )", status: 'warning',isClosable: true, position:"top" })
+      } else if(document.getElementById("GMN").value.length!=12){
+        toastIdRef.current = toast({ description: "Invalid Gaurdian's Number! ( Format : 919876543210 )", status: 'warning',isClosable: true, position:"top" })
+      } else{
+        document.getElementById("last").disabled = true;
+        axios.post(server_URL + "studentinsert", params).then((results)=>{
+          toastIdRef.current = toast({ description: results.data+" Redirecting...", status: 'success',isClosable: true, position:"top" })
+          setTimeout(() => {
+            history.push('/auth/SignIn')
+          }, 2000)
+        }).catch(()=>{
+          toastIdRef.current = toast({ description: "Unable to submit. Verify your details...", status: 'error',isClosable: true, position:"top" })
+        });
+      }
+      // window.location.href = URL + "Student#/auth/signin";
+    } else {
+      setMessage(not_filled_msg)
+      onOpen()
+      // alert(not_filled_msg);
+    }
   }
   const textColor = useColorModeValue("gray.700", "white");
 
@@ -156,6 +306,21 @@ function GeneralInformationdata() {
         log out
       </Button>
       <SimpleGrid columns={{ sm: 1, md: 1, xl: 1 }} gap={4}>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Fields Not Filled</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>            
+               <pre>{Message}</pre>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
           <CardHeader p="6px 0px 22px 0px">
             <Text fontSize="xl" color={textColor} fontWeight="bold">
@@ -292,7 +457,7 @@ function GeneralInformationdata() {
                               id="REID"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="register no"
                             />
                           </Tooltip>
@@ -335,7 +500,7 @@ function GeneralInformationdata() {
                           <Select
                             minWidth="26em"
                             id="SID"
-                            placeholder="Select Option"
+                            placeholder="Select Gender"
                             isRequired
                           >
                             <option value="Male">Male</option>
@@ -513,6 +678,7 @@ function GeneralInformationdata() {
                     >
                       <Flex direction="column">
                         <FormControl>
+                        <Tooltip label="Ex: Indian" placement="right">
                           <Input
                             minWidth="30em"
                             id="NATIONID"
@@ -520,7 +686,7 @@ function GeneralInformationdata() {
                             fontSize="sm"
                             type="text"
                             placeholder="nationality"
-                          />
+                          /></Tooltip>
                         </FormControl>
                       </Flex>
                     </Flex>
@@ -824,14 +990,15 @@ function GeneralInformationdata() {
                     >
                       <Flex direction="column">
                         <FormControl>
+                        <Tooltip label="Include 91 before number EX: 919876543210" placement="right">
                           <Input
                             minWidth="30em"
                             id="CONTACTID"
                             borderRadius="5px"
                             fontSize="sm"
-                            type="text"
+                            type="number"
                             placeholder="contact no."
-                          />
+                          /></Tooltip>
                         </FormControl>
                       </Flex>
                     </Flex>
@@ -873,7 +1040,7 @@ function GeneralInformationdata() {
                             id="AADHARID"
                             borderRadius="5px"
                             fontSize="sm"
-                            type="text"
+                            type="number"
                             placeholder="aadhar no."
                           />
                         </FormControl>
@@ -918,7 +1085,8 @@ function GeneralInformationdata() {
                             borderRadius="5px"
                             fontSize="sm"
                             type="text"
-                            placeholder="official email"
+                            disabled={true}
+                            value={localStorage.getItem("useremail")}
                           />
                         </FormControl>
                       </Flex>
@@ -1088,6 +1256,7 @@ function GeneralInformationdata() {
                     >
                       <Flex direction="column">
                         <FormControl>
+                        <Tooltip label="EX: Tamil, English, Hindi" placement="right">
                           <Input
                             minWidth="30em"
                             id="LANKNO"
@@ -1095,7 +1264,7 @@ function GeneralInformationdata() {
                             fontSize="sm"
                             type="text"
                             placeholder="languages known"
-                          />
+                          /></Tooltip>
                         </FormControl>
                       </Flex>
                     </Flex>
@@ -1110,7 +1279,7 @@ function GeneralInformationdata() {
                       flexWrap="nowrap"
                     >
                       <Flex direction="column">
-                        <FormControl isRequired>
+                        <FormControl>
                           <FormLabel
                             fontSize="md"
                             color={textColor}
@@ -1416,7 +1585,7 @@ function GeneralInformationdata() {
                               id="TM1"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="total marks"
                             />
                           </FormControl>
@@ -1455,12 +1624,12 @@ function GeneralInformationdata() {
                       >
                         <Flex direction="column">
                           <FormControl>
-                            <Tooltip label="Ex: 90%" placement="right">
+                            <Tooltip label="Ex: 90.25" placement="right">
                               <Input
                                 id="OP1"
                                 borderRadius="5px"
                                 fontSize="sm"
-                                type="text"
+                                type="number"
                                 placeholder="Overall Percentage"
                               />
                             </Tooltip>
@@ -1505,7 +1674,7 @@ function GeneralInformationdata() {
                                 id="COM1"
                                 borderRadius="5px"
                                 fontSize="sm"
-                                type="text"
+                                type="number"
                                 placeholder="Cut-Off Marks"
                               />
                             </Tooltip>
@@ -1550,7 +1719,7 @@ function GeneralInformationdata() {
                                 id="NOA1"
                                 borderRadius="5px"
                                 fontSize="sm"
-                                type="text"
+                                type="number"
                                 placeholder="No. Of Attempts"
                               />
                             </Tooltip>
@@ -1782,7 +1951,7 @@ function GeneralInformationdata() {
                               id="TM2"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="total marks"
                             />
                           </FormControl>
@@ -1821,12 +1990,12 @@ function GeneralInformationdata() {
                       >
                         <Flex direction="column">
                           <FormControl>
-                            <Tooltip label="Ex: 90%" placement="right">
+                            <Tooltip label="Ex: 90.25" placement="right">
                               <Input
                                 id="OP2"
                                 borderRadius="5px"
                                 fontSize="sm"
-                                type="text"
+                                type="number"
                                 placeholder="Overall Percentage"
                               />
                             </Tooltip>
@@ -1871,7 +2040,7 @@ function GeneralInformationdata() {
                                 id="NOA2"
                                 borderRadius="5px"
                                 fontSize="sm"
-                                type="text"
+                                type="number"
                                 placeholder="No. Of Attempts"
                               />
                             </Tooltip>
@@ -2093,7 +2262,7 @@ function GeneralInformationdata() {
                               id="FAI"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="Enter Father's Annual Income"
                             />
                           </FormControl>
@@ -2132,13 +2301,15 @@ function GeneralInformationdata() {
                       >
                         <Flex direction="column">
                           <FormControl>
+                          <Tooltip label="Include 91 before number EX: 919876543210" placement="right">
                             <Input
                               id="FMN"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="Enter Father's Mobile No."
                             />
+                          </Tooltip>
                           </FormControl>
                         </Flex>
                       </Flex>
@@ -2382,7 +2553,7 @@ function GeneralInformationdata() {
                               id="GAI"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="Enter Guardian Annual Income"
                             />
                           </FormControl>
@@ -2419,13 +2590,15 @@ function GeneralInformationdata() {
                       >
                         <Flex direction="column">
                           <FormControl>
+                          <Tooltip label="Include 91 before number EX: 919876543210" placement="right">
                             <Input
                               id="GMN"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="Enter Guardian Mobile No."
                             />
+                          </Tooltip>
                           </FormControl>
                         </Flex>
                       </Flex>
@@ -2684,7 +2857,7 @@ function GeneralInformationdata() {
                               id="MAI"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="Enter Mother's Annual Income"
                             />
                           </FormControl>
@@ -2723,13 +2896,15 @@ function GeneralInformationdata() {
                       >
                         <Flex direction="column">
                           <FormControl>
+                          <Tooltip label="Include 91 before number EX: 919876543210" placement="right">
                             <Input
                               id="MMN"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="Enter Mother's Mobile No."
                             />
+                          </Tooltip>
                           </FormControl>
                         </Flex>
                       </Flex>
@@ -2812,7 +2987,7 @@ function GeneralInformationdata() {
                                 id="NOS"
                                 borderRadius="5px"
                                 fontSize="sm"
-                                type="text"
+                                type="number"
                                 placeholder="Enter No. Of Siblings"
                               />
                             </Tooltip>
@@ -2821,7 +2996,7 @@ function GeneralInformationdata() {
                       </Flex>
                     </Td>
                   </Tr>
-                  <Tr>
+                  {/* <Tr>
                     <Td minWidth={{ sm: "17rem" }}>
                       <Flex
                         align="center"
@@ -2985,7 +3160,7 @@ function GeneralInformationdata() {
                         </Flex>
                       </Flex>
                     </Td>
-                  </Tr>
+                  </Tr> */}
                 </Tbody>
               </Table>
             </CardBody>
@@ -3121,8 +3296,12 @@ function GeneralInformationdata() {
                               placeholder="Select Option"
                               isRequired
                             >
-                              <option value="GQ">Government Quota</option>
-                              <option value="MQ">Management Quota</option>
+                              <option value="Government Quota">
+                                Government Quota
+                              </option>
+                              <option value="Management Quota">
+                                Management Quota
+                              </option>
                             </Select>
                           </FormControl>
                         </Flex>
@@ -3205,8 +3384,8 @@ function GeneralInformationdata() {
                               placeholder="Select Option"
                               isRequired
                             >
-                              <option value="DS">Day Scholar</option>
-                              <option value="H">Hosteller</option>
+                              <option value="Day Scholar">Day Scholar</option>
+                              <option value="Hosteller">Hosteller</option>
                             </Select>
                           </FormControl>
                         </Flex>
@@ -3301,7 +3480,7 @@ function GeneralInformationdata() {
                               id="SA"
                               borderRadius="5px"
                               fontSize="sm"
-                              type="text"
+                              type="number"
                               placeholder="Scholarship Amount"
                             />
                           </FormControl>
@@ -3344,7 +3523,7 @@ function GeneralInformationdata() {
                               isRequired
                             >
                               <option value="Yes">Yes</option>
-                              <option value="No">N0</option>
+                              <option value="No">No</option>
                             </Select>
                           </FormControl>
                         </Flex>
@@ -3437,6 +3616,7 @@ function GeneralInformationdata() {
                       >
                         <Flex direction="column">
                           <FormControl>
+                          <Tooltip label="Ex: Python, Java" placement="right">
                             <Input
                               id="PL"
                               borderRadius="5px"
@@ -3444,6 +3624,7 @@ function GeneralInformationdata() {
                               type="text"
                               placeholder="Enter if any"
                             />
+                          </Tooltip>
                           </FormControl>
                         </Flex>
                       </Flex>
@@ -3464,7 +3645,7 @@ function GeneralInformationdata() {
                             fontWeight="bold"
                             minWidth="100%"
                           >
-                            Software Profficieny
+                            Software Proficiency
                           </Text>
                         </Flex>
                       </Flex>
@@ -3505,7 +3686,7 @@ function GeneralInformationdata() {
                             fontWeight="bold"
                             minWidth="100%"
                           >
-                            Department Related Profficieny
+                            Department Related Proficiency
                           </Text>
                         </Flex>
                       </Flex>
@@ -4055,7 +4236,7 @@ function GeneralInformationdata() {
                       >
                         <Flex direction="column">
                           <FormControl>
-                            <Tooltip label="Ex: 2MONTHS" placement="right">
+                            <Tooltip label="Ex: 2 MONTHS" placement="right">
                               <Input
                                 id="DUR"
                                 borderRadius="5px"
@@ -4084,6 +4265,7 @@ function GeneralInformationdata() {
         width="30%"
         colorScheme="orange"
         variant="solid"
+        id="last"
       >
         Submit
       </Button>

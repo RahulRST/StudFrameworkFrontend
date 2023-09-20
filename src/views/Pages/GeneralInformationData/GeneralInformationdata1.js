@@ -2,7 +2,7 @@
 
 //Class Advisor GeneralInformationData
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 // Chakra imports
 import {
@@ -20,6 +20,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   SimpleGrid,
+  useToast,
   Button,
 } from "@chakra-ui/react";
 // Custom components
@@ -42,16 +43,19 @@ function GeneralInformationdata({ location }) {
   }
   const [data, setData] = useState([]);
 
-  let params = new URLSearchParams();
-  params.append("RollNumber", localStorage.getItem("generalStudent"));
-
   useEffect(async () => {
-  axios.post(server_URL + "GeneralData", params).then((items) => {
-    setData(items.data);
-  });
-  }, []);
+    let params = new URLSearchParams();
+    params.append("RollNumber", localStorage.getItem("generalStudent"));
+    axios.post(server_URL + "GeneralData", params).then((items) => {
+      setData(items.data);
+    });  
+  },[])
 
   const textColor = useColorModeValue("gray.700", "white");
+
+  // Toast var
+  const toast = useToast();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   var GData = TableRow2;
   return (
@@ -598,7 +602,7 @@ function GeneralInformationdata({ location }) {
                       );
                     })}
                   </Tr>
-                  <Tr>
+                  {/* <Tr>
                     {data.map((item) => {
                       return (
                         <GData
@@ -627,7 +631,7 @@ function GeneralInformationdata({ location }) {
                         />
                       );
                     })}
-                  </Tr>
+                  </Tr> */}
                 </Tbody>
               </Table>
             </CardBody>
@@ -980,6 +984,13 @@ function GeneralInformationdata({ location }) {
                     onClick={() => {
                       onClose();
                       fundelete();
+                      toast({
+                        title: "Student Record Deleted Successfully",
+                        status: "success",
+                        duration: 9000,
+                        position: "top",
+                        isClosable: true,
+                      });
                     }}
                   >
                     Confirm

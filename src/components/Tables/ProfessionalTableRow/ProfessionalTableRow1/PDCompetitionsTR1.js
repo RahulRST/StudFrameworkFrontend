@@ -1,3 +1,5 @@
+/** @format */
+
 //Class Advisor PD Competitions TableRow
 import {
   Button,
@@ -14,6 +16,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useColorModeValue,
+  useToast,
   useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -22,6 +25,9 @@ import React from "react";
 import { server_URL } from "controller/urls_config";
 
 function ProfessionalDevelopmentTableRow(props) {
+  // Toast var
+  const toast = useToast();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { id, row1, row2, row3, row4, row5, row6 } = props;
@@ -29,6 +35,7 @@ function ProfessionalDevelopmentTableRow(props) {
 
   function funedit() {
     let cid = { id };
+
     let params = new URLSearchParams();
     params.append("columnid", cid.id);
     params.append("comp_name", document.getElementById("nameID").value);
@@ -36,14 +43,22 @@ function ProfessionalDevelopmentTableRow(props) {
     params.append("date", document.getElementById("dateID").value);
     params.append("position_secured", document.getElementById("psID").value);
     params.append("credits", document.getElementById("creditsID").value);
-    axios.post(server_URL + "comp_edit", params);
+    axios.post(server_URL + "comp_edit", params).then((results)=>{
+      if(results){
+        window.location.reload(false);
+      }
+    });
   }
 
   function fundelete() {
     let cid = { id };
     let params = new URLSearchParams();
     params.append("columnid", cid.id);
-    axios.post(server_URL + "comp_delete", params);
+    axios.post(server_URL + "comp_delete", params).then((results)=>{
+      if(results){
+        window.location.reload(false);
+      }
+    });;
   }
 
   function funverify() {
@@ -51,7 +66,11 @@ function ProfessionalDevelopmentTableRow(props) {
     let params = new URLSearchParams();
     params.append("columnid", cid.id);
     params.append("verify", "Verified");
-    axios.post(server_URL + "comp_verify", params);
+    axios.post(server_URL + "comp_verify", params).then((results)=>{
+      if(results){
+        window.location.reload(false);
+      }
+    });;
   }
 
   return (
@@ -191,6 +210,13 @@ function ProfessionalDevelopmentTableRow(props) {
                 colorScheme="blue"
                 mr={3}
                 onClick={() => {
+                  toast({
+                    title: "Edited Successfully",
+                    status: "success",
+                    duration: 9000,
+                    position: "top",
+                    isClosable: true,
+                  });
                   funedit();
                   onClose();
                 }}

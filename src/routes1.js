@@ -87,14 +87,14 @@ var dashRoutes = [
     layout: "/admin1",
   },
 
-  // {
-  //   path: "/profile",
-  //   name: "Profile",
-  //   icon: <PersonIcon color="inherit" />,
-  //   secondaryNavbar: true,
-  //   component: Profile,
-  //   layout: "/admin1",
-  // },
+  {
+    path: "/profile",
+    name: "Profile",
+    icon: <PersonIcon color="inherit" />,
+    secondaryNavbar: true,
+    component: Profile,
+    layout: "/admin1",
+  },
   {
     path: "/signin",
     name: "Log Out",

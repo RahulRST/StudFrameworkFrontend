@@ -8,17 +8,20 @@ import InternationalData from "views/Pages/InternationalData/InternationalData0"
 import ExtraCurricularData from "views/Pages/ExtraCurricularData/ExtraCurricularData0";
 import Academicsdata from "views/Pages/AcademicData/Academicdata0";
 import ProfessionalDevelopmentData0 from "views/Pages/ProfessionalDevelopmentData/ProfessionalDevelopmentData0";
+import LicetCredits from "views/Home/LICET Credits/LicetCredits0";
 
 import Profile from "views/Home/Profile/Profile0.js";
 import SignIn from "views/Pages/SignIn.js";
 
 import {
-  HomeIcon,
+  ProfileIcon,
   StatsIcon,
-  CreditIcon,
-  PersonIcon,
+  CartIcon,
+  SupportIcon,
   DocumentIcon,
-  RocketIcon,
+  GlobeIcon,
+  ClockIcon,
+  RocketIcon
 } from "components/Icons/Icons";
 
 var dashRoutes = [
@@ -32,7 +35,7 @@ var dashRoutes = [
   {
     path: "/GeneralInformation",
     name: "General Information",
-    icon: <StatsIcon color="inherit" />,
+    icon: <DocumentIcon color="inherit" />,
     component: GeneralInformation,
     layout: "/admin0",
   },
@@ -50,14 +53,14 @@ var dashRoutes = [
         International Exposure
       </p>
     ),
-    icon: <StatsIcon color="inherit" />,
+    icon: <GlobeIcon color="inherit" />,
     component: InternationalData,
     layout: "/admin0",
   },
   {
     path: "/ExtracurricularData",
     name: "ExtraCurricular",
-    icon: <StatsIcon color="inherit" />,
+    icon: <ClockIcon color="inherit" />,
     component: ExtraCurricularData,
     layout: "/admin0",
   },
@@ -75,7 +78,7 @@ var dashRoutes = [
         Professional Development
       </p>
     ),
-    icon: <StatsIcon color="inherit" />,
+    icon: <RocketIcon color="inherit" />,
     component: ProfessionalDevelopmentData0,
     layout: "/admin0",
   },
@@ -86,11 +89,18 @@ var dashRoutes = [
     component: Academicsdata,
     layout: "/admin0",
   },
+  {
+    path: "/Licetcredits",
+    name: "LICET Credits",
+    icon: <CartIcon color="inherit" />,
+    component: LicetCredits,
+    layout: "/admin0",
+  },
 
   {
     path: "/profile",
     name: "Profile",
-    icon: <PersonIcon color="inherit" />,
+    icon: <ProfileIcon color="inherit" />,
     secondaryNavbar: true,
     component: Profile,
     layout: "/admin0",
@@ -98,7 +108,7 @@ var dashRoutes = [
   {
     path: "/signin",
     name: "Log Out",
-    icon: <DocumentIcon color="inherit" />,
+    icon: <SupportIcon color="inherit" />,
     component: SignIn,
     layout: "/auth",
   },

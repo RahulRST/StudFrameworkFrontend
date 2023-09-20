@@ -1,3 +1,5 @@
+/** @format */
+
 //Class Advisor ExtraCurricular Sports TableRow
 
 import {
@@ -14,6 +16,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalFooter,
+  useToast,
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
@@ -23,6 +26,8 @@ import axios from "axios";
 import { server_URL } from "controller/urls_config";
 
 function ExtraCurricularTableRow(props) {
+  // Toast var
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { id, row1, row2, row3, row4, row5, row6 } = props;
   const textColor = useColorModeValue("gray.700", "white");
@@ -187,6 +192,13 @@ function ExtraCurricularTableRow(props) {
                 colorScheme="blue"
                 mr={3}
                 onClick={() => {
+                  toast({
+                    title: "Edited Successfully",
+                    status: "success",
+                    duration: 9000,
+                    position: "top",
+                    isClosable: true,
+                  });
                   funedit();
                   onClose();
                 }}

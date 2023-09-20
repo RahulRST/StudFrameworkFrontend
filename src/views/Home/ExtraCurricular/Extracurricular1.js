@@ -19,9 +19,12 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  useToast,
   Box,
 } from "@chakra-ui/react";
+
 import { SearchIcon } from "@chakra-ui/icons";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -29,13 +32,18 @@ import CardBody from "components/Card/CardBody.js";
 import StudentListExtraCurricular from "components/Tables/StudentList/StudentListExtraCurricular1";
 
 var data2 = [];
+var Loader = require("react-loader");
 
 import { CSVLink } from "react-csv";
 import { server_URL } from "controller/urls_config";
 
 function Extracurricular() {
+  // Toast var
+  const toast = useToast();
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [Loaded, setLoading] = useState(false);
+
   let params = new URLSearchParams();
   params.append("batch", localStorage.getItem("batch"));
   params.append("dept", localStorage.getItem("dept"));
@@ -43,7 +51,7 @@ function Extracurricular() {
   useEffect(async () => {
     axios.post(server_URL + "ExtracurricularCA", params).then((items) => {
       setData(items.data);
-      console.log(items.data);
+      setLoading(true);
     });
   }, []);
 
@@ -67,6 +75,7 @@ function Extracurricular() {
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Loader color="#FBD38D" height={10} width={10} loaded={Loaded} />
       <Card mb="1rem">
         <CardBody>
           <Flex flexDirection="column" align="center" justify="center" w="100%">
@@ -127,7 +136,15 @@ function Extracurricular() {
             <Button
               minWidth="fit-content"
               mt="1.5em"
-              onClick="m"
+              onClick={() =>
+                toast({
+                  title: "Report Downloaded Successfully",
+                  status: "success",
+                  duration: 9000,
+                  position: "top",
+                  isClosable: true,
+                })
+              }
               colorScheme="orange"
               variant="solid"
             >
@@ -183,6 +200,7 @@ function Extracurricular() {
                       reg={item.reg_no}
                       batch={item.batch}
                       email={item.licet_email}
+                      key={item.roll_no}
                     />
                   );
                 })}

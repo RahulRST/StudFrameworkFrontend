@@ -1,3 +1,5 @@
+/** @format */
+
 //HoD Academic
 
 import React, { useState, useEffect } from "react";
@@ -29,7 +31,6 @@ import StudentListAcademic from "components/Tables/StudentList/StudentListAcadem
 import { server_URL } from "controller/urls_config";
 
 var data2 = [];
-
 import { CSVLink } from "react-csv";
 
 function Academic() {
@@ -37,12 +38,16 @@ function Academic() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerm1, setSearchTerm1] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
+  const [Loaded, setLoading] = useState(false);
+
   let params = new URLSearchParams();
   params.append("department", localStorage.getItem("dept"));
+  params.append("StudentDetails", localStorage.getItem("StudentDetails"));
 
   useEffect(async () => {
     axios.post(server_URL + "AcademicsDataHOD", params).then((items) => {
       setData(items.data);
+      setLoading(false);
     });
   }, []);
 
@@ -96,7 +101,7 @@ function Academic() {
           </Flex>
         </CardBody>
 
-        <SimpleGrid columns={{ sm: 1, md: 3, xl: 3 }} gap={5}>
+        <SimpleGrid columns={{ sm: 1, md: 2, xl: 2 }} gap={5}>
           <Box>
             <CardHeader mt="1em">
               <Text fontSize="lg" color={textColor} fontWeight="semi">

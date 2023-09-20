@@ -20,7 +20,6 @@ import {
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-
 import axios from "axios";
 import { server_URL } from "controller/urls_config";
 
@@ -29,7 +28,7 @@ function Academicdata() {
   let params = new URLSearchParams();
   const [data, setdata] = useState([]);
   const [Adata, setAdata] = useState([]);
-  params.append("StudentDetails", localStorage.getItem("StudentRoll"));
+  params.append("StudentDetails", localStorage.getItem("generalStudent"));
   useEffect(async () => {
     axios
       .all([
@@ -42,9 +41,6 @@ function Academicdata() {
             (header) =>
               header.COLUMN_NAME != "id" && header.COLUMN_NAME != "roll_no"
           );
-          console.log(data2);
-          filtered_data.reverse();
-
           let student_data = [];
           for (var i = 0; i < data2.data.length; i++) {
             let student = Object.values(data2.data[i]);

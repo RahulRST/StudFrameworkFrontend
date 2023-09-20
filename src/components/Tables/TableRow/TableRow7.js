@@ -1,3 +1,5 @@
+/** @format */
+
 //Table with 7 columns
 
 import {
@@ -56,14 +58,14 @@ function TableRow7(props) {
           </FormControl>
         </Flex>
       </Td>
-      <Td minWidth="15em">
+      <Td minWidth="5em">
         <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
           <FormControl>
             <Flex direction="column">{row6}</Flex>
           </FormControl>
         </Flex>
       </Td>
-      <Td minWidth="5em">
+      <Td minWidth="9em">
         <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
           <FormControl>
             <Flex direction="column">{row7}</Flex>
